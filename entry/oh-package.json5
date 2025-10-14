@@ -1,10 +1,14 @@
 {
+  "license": "",
+  "devDependencies": {},
+  "author": "",
   "name": "entry",
-  "version": "1.0.0",
+  "license": "",
+  "dependencies": {
+    "hytech": "file:../AppScope/hytech.har",
+    "ohbuild": "file:src/mock/ohbuild.har"
+  },
   "description": "Please describe the basic information.",
   "main": "",
-  "author": "",
-  "license": "",
-  "dependencies": {}
+  "version": "1.0.0"
 }
-

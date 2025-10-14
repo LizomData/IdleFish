@@ -3,6 +3,51 @@
     {
       "name": "start_window_background",
       "value": "#FFFFFF"
+    },
+    {
+      "name": "white",
+      "value": "#FFFFFF"
+    },
+    {
+      "name": "gray",
+      "value": "#80000000"
+    },
+    {
+      "name": "dark_main",
+      "value": "#FF21C8B7"
+    },
+    {
+      "name": "main",
+      "value": "#8032FAE6"
+    },
+    {
+      "name": "fuzhu1",
+      "value": "#FDC5D1"
+    },
+    {
+      "name": "control_bar_bg",
+      "value": "#9932FAE6"
+    },
+    {
+      "name": "black1",
+      "value": "#FF3E3D3D"
+    },
+    {
+      "name": "tint_gray",
+      "value": "#FFE3E0E0"
+    },
+    {
+      "name": "gray_bg",
+      "value": "#F2F2F2"
+    },
+    {
+      "name": "green_music",
+      "value": "#00B564"
+    },
+    {
+      "name": "zhuti",
+      "value": "#FFE20D"
     }
+
   ]
 }

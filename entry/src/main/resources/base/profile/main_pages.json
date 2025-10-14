@@ -1,7 +1,15 @@
 {
   "src": [
-    "pages/Index",
-    "pages/Login",
-    "pages/Personal"
+    "pages/SplashPage",
+    "pages/LoginPage",
+    "pages/RegistPage",
+    "pages/MainPage",
+    "pages/DetailPage",
+    "pages/UpdatePage",
+    "pages/fragment/HomeFragment",
+    "pages/fragment/SellFragment",
+    "pages/fragment/BuyFragment",
+    "pages/fragment/MineFragment",
+    "pages/fragment/PublishFragment"
   ]
 }
