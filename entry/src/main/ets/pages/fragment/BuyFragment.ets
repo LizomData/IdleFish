@@ -39,7 +39,7 @@ export struct BuyFragment {
           FlowItem() {
             Stack() {
               Column() {
-                Image(itemData.icon_url)
+                Image(itemData.image_urls)
                   .width('100%')
                   //.height(index == 2 ? 100 : 150)
                   .height(150)

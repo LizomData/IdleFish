@@ -11,11 +11,12 @@ export default interface Food extends ValuesBucket {
   // 商品名称或标题
   name: string
   // 想要人数或收藏量
-  want_count: string
+  people_want: string
   // 商品图片地址
-  icon_url: string
+  image_urls: string
   // 商品现价
-  now_price: string
+  price: string
+
 }
 
 export interface TabBean {

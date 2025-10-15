@@ -77,7 +77,7 @@ struct ProductDetailPage {
           Row() {
             Stack() {
               // 主图区域，展示商品大图
-              Image(this.food.icon_url)
+              Image(this.food.image_urls)
                 .width('90%')
                 .height(300).borderRadius(10)
               Row() {
@@ -117,7 +117,7 @@ struct ProductDetailPage {
               Column({ space: 5 }) {
 
 
-                Text('现价￥' + (this.food.now_price).toString())
+                Text('现价￥' + (this.food.price).toString())
                   .fontSize(20).fontWeight(FontWeight.Bold)
                   .fontColor(Color.Black)
 

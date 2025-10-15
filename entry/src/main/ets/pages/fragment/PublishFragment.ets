@@ -79,11 +79,11 @@ export struct PublishFragment {
       //名称
       name: this.tempDes,
       //
-      want_count: `${wantN}`,
+      people_want: `${wantN}`,
       //图片
-      icon_url: this.tempImageUrl,
+      image_urls: this.tempImageUrl,
       //价格
-      now_price: this.tempPrice,
+      price: this.tempPrice,
     }
     DbUtil.insertFood(v)
 

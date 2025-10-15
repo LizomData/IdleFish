@@ -1,13 +1,18 @@
 // 导入页面路由模块
 import router from '@ohos.router';
+import { http } from '@kit.NetworkKit';
 // 导入弹窗
 import promptAction from '@ohos.promptAction';
 import { preferences } from '@kit.ArkData';
 import { Path_Regist } from './RegistPage';
 import PreferencesUtil from './../util/PreferencesUtil';
 import { Path_Main } from './MainPage';
+import { BusinessError } from '@kit.BasicServicesKit';
+import Toast from '../util/Toast';
 
 export const Path_Login = 'pages/LoginPage'
+
+
 
 @Entry
 @Component
@@ -77,7 +82,8 @@ struct Login {
           .margin({ top: 20 })
           .backgroundColor('#ffdec515')
           .onClick(() => {
-            this.loginBtnClick()
+            this.loginBtnClick();
+
           })
 
         Row() {
@@ -149,6 +155,65 @@ struct Login {
       })
       return
     }
+
+console.log(JSON.stringify({
+  "username":this.user,
+  "password":this.password
+}))
+    // 创建请求对象
+    const httpRequest = http.createHttp()
+    httpRequest.request('http://10.34.82.240:8800/api/login', {
+      method:http.RequestMethod.POST,
+      header: { 'Content-Type': 'application/json' },
+      // 参数
+      extraData: JSON.stringify({
+        "username":this.user,
+        "password":this.password
+      })
+    },
+      // 请求完成（不管成功还是失败）都调用的回调函数
+      (err: BusinessError, data: http.HttpResponse) => {
+        if (!err) {
+          // 如果err无值代表请求成功，打印响应体
+          console.info('Result:' + JSON.stringify(data.result));
+
+
+
+          if(JSON.parse(data.result.toString())["code"]!="0")
+          {
+            promptAction.showToast({
+              message: JSON.parse(data.result.toString())["msg"],
+              duration: 1000,
+              bottom: '360vp'
+            })
+            return
+          }
+
+          Toast.show("登录成功:"+this.user);
+
+          PreferencesUtil.putPreferenceValue('user_name', this.user)
+          PreferencesUtil.putPreferenceValue('token', JSON.parse(data.result.toString())["data"]["token"])
+
+
+          // 销毁请求对象
+          httpRequest.destroy()
+
+          // 路由跳转
+          router.replaceUrl({
+            url: Path_Main
+          }).catch((err: Error) => {
+            // 错误提示
+          })
+
+          return;
+        }
+        console.error(err.message);
+
+
+
+      })
+
+    return;
     // 从偏好存储中获取注册时保存的用户名
     let v: preferences.ValueType = await PreferencesUtil.getPreferenceValue('user_name', '')
     if (v == '') {

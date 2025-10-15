@@ -112,9 +112,9 @@ class DbUtil {
         publish_u_id: resultSet.getString(resultSet.getColumnIndex('publish_u_id')),
         own_u_id: resultSet.getString(resultSet.getColumnIndex('own_u_id')),
         name: resultSet.getString(resultSet.getColumnIndex('name')),
-        want_count: resultSet.getString(resultSet.getColumnIndex('want_count')),
-        icon_url: resultSet.getString(resultSet.getColumnIndex('icon_url')),
-        now_price: resultSet.getString(resultSet.getColumnIndex('now_price')),
+        people_want: resultSet.getString(resultSet.getColumnIndex('want_count')),
+        image_urls: resultSet.getString(resultSet.getColumnIndex('icon_url')),
+        price: resultSet.getString(resultSet.getColumnIndex('now_price')),
 
       }
       // 追加到数组中
@@ -142,9 +142,10 @@ class DbUtil {
         publish_u_id: resultSet.getString(resultSet.getColumnIndex('publish_u_id')),
         own_u_id: resultSet.getString(resultSet.getColumnIndex('own_u_id')),
         name: resultSet.getString(resultSet.getColumnIndex('name')),
-        want_count: resultSet.getString(resultSet.getColumnIndex('want_count')),
-        icon_url: resultSet.getString(resultSet.getColumnIndex('icon_url')),
-        now_price: resultSet.getString(resultSet.getColumnIndex('now_price')),
+        people_want: resultSet.getString(resultSet.getColumnIndex('want_count')),
+        image_urls: resultSet.getString(resultSet.getColumnIndex('icon_url')),
+        price: resultSet.getString(resultSet.getColumnIndex('now_price')),
+
 
       }
       // 追加到数组中
@@ -176,9 +177,9 @@ class DbUtil {
         publish_u_id: resultSet.getString(resultSet.getColumnIndex('publish_u_id')),
         own_u_id: resultSet.getString(resultSet.getColumnIndex('own_u_id')),
         name: resultSet.getString(resultSet.getColumnIndex('name')),
-        want_count: resultSet.getString(resultSet.getColumnIndex('want_count')),
-        icon_url: resultSet.getString(resultSet.getColumnIndex('icon_url')),
-        now_price: resultSet.getString(resultSet.getColumnIndex('now_price')),
+        people_want: resultSet.getString(resultSet.getColumnIndex('want_count')),
+        image_urls: resultSet.getString(resultSet.getColumnIndex('icon_url')),
+        price: resultSet.getString(resultSet.getColumnIndex('now_price')),
 
       }
       // 追加到数组中
@@ -211,9 +212,9 @@ class DbUtil {
         publish_u_id: resultSet.getString(resultSet.getColumnIndex('publish_u_id')),
         own_u_id: resultSet.getString(resultSet.getColumnIndex('own_u_id')),
         name: resultSet.getString(resultSet.getColumnIndex('name')),
-        want_count: resultSet.getString(resultSet.getColumnIndex('want_count')),
-        icon_url: resultSet.getString(resultSet.getColumnIndex('icon_url')),
-        now_price: resultSet.getString(resultSet.getColumnIndex('now_price')),
+        people_want: resultSet.getString(resultSet.getColumnIndex('want_count')),
+        image_urls: resultSet.getString(resultSet.getColumnIndex('icon_url')),
+        price: resultSet.getString(resultSet.getColumnIndex('now_price')),
 
       }
       // 追加到数组中
@@ -243,9 +244,9 @@ class DbUtil {
         publish_u_id: resultSet.getString(resultSet.getColumnIndex('publish_u_id')),
         own_u_id: resultSet.getString(resultSet.getColumnIndex('own_u_id')),
         name: resultSet.getString(resultSet.getColumnIndex('name')),
-        want_count: resultSet.getString(resultSet.getColumnIndex('want_count')),
-        icon_url: resultSet.getString(resultSet.getColumnIndex('icon_url')),
-        now_price: resultSet.getString(resultSet.getColumnIndex('now_price')),
+        people_want: resultSet.getString(resultSet.getColumnIndex('want_count')),
+        image_urls: resultSet.getString(resultSet.getColumnIndex('icon_url')),
+        price: resultSet.getString(resultSet.getColumnIndex('now_price')),
 
       }
       // 追加到数组中

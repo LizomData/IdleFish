@@ -1,6 +1,8 @@
-
 import router from '@ohos.router';
+import PreferencesUtil from '../util/PreferencesUtil';
 import { Path_Login } from './LoginPage';
+import { Path_Main } from './MainPage';
+import { promptAction } from '@kit.ArkUI';
 
 /**
  * 欢迎页，可以设置倒计时
@@ -36,13 +38,33 @@ struct SplashPage {
   /**
    * 跳转到主页.
    */
-  jumpToAppHomePage() {
+  async jumpToAppHomePage() {
     // 欢迎页跳转到登录页，后续可扩展到主页
-    router.pushUrl({
-      url: Path_Login
-    }).catch((error: Error) => {
-      //Logger.error(this.TAG, 'AdvertisingPage pushUrl error ' + JSON.stringify(error));
-    });
+    const token: string = await PreferencesUtil.getStringPreference('token', '');
+    const username: string = await PreferencesUtil.getStringPreference('user_name', '');
+
+    if (token == "") {
+      router.pushUrl({
+        url: Path_Login
+      }).catch((error: Error) => {
+        //Logger.error(this.TAG, 'AdvertisingPage pushUrl error ' + JSON.stringify(error));
+      });
+      return
+    }
+
+    promptAction.showToast({
+      message: "欢迎回来: "+username,
+      duration: 1000,
+      bottom: '360vp'
+    })
+
+    // 路由跳转
+    router.replaceUrl({
+      url: Path_Main
+    }).catch((err: Error) => {
+      // 错误提示
+    })
+
   }
 
   build() {

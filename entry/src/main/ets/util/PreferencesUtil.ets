@@ -88,6 +88,18 @@ class PreferencesUtil {
     }
 
   }
+
+  async getStringPreference(key: string, defaultValue: string): Promise<string> {
+    const value = await this.getPreferenceValue(key, defaultValue);
+
+    // 确保返回的是字符串
+    if (typeof value === 'string') {
+      return value;
+    }
+
+    // 如果不是字符串，转换为字符串
+    return String(value);
+  }
 }
 
 const preUtil = new PreferencesUtil()

@@ -43,9 +43,9 @@ export struct UpdatePage {
     // 获取上一页传递过来的商品信息并初始化表单
     this.routeParam = router.getParams() as RouteParam
     this.food = this.routeParam.content as Food
-    this.tempImageUrl = this.food.icon_url
+    this.tempImageUrl = this.food.image_urls
     this.tempDes = this.food.name
-    this.tempPrice = this.food.now_price
+    this.tempPrice = this.food.price
 
   }
 
@@ -91,11 +91,11 @@ export struct UpdatePage {
       //名称
       name: this.tempDes,
       //
-      want_count: `${wantN}`,
+      people_want: `${wantN}`,
       //图片
-      icon_url: this.tempImageUrl,
+      image_urls: this.tempImageUrl,
       //价格
-      now_price: this.tempPrice,
+      price: this.tempPrice,
     }
     // 更新数据库后通过事件通知刷新
     DbUtil.updateFood(v).then(()=>{

@@ -3,13 +3,25 @@ import router from '@ohos.router';
 import { o } from "hytech"
 import promptAction from '@ohos.promptAction';
 import { Path_Login } from '../LoginPage';
+import PreferencesUtil from '../../util/PreferencesUtil';
+import { preferences } from '@kit.ArkData';
 
 @Preview
 @Entry
 @Component
 export struct MineFragment {
+  @State username: string ="unknown";
+
   async aboutToAppear() {
 
+    const userName: string = await PreferencesUtil.getStringPreference('user_name', '');
+
+    // 更新状态
+    if (userName.trim() === "") {
+      this.username = 'Guest';
+    } else {
+      this.username = userName;
+    }
   }
 
   build() {
@@ -26,7 +38,7 @@ export struct MineFragment {
 
           })
 
-        Text('@祖师爷科技')
+        Text(this.username)
           .fontSize(20)
           .fontWeight(FontWeight.Bold)
           .fontColor(Color.Black)

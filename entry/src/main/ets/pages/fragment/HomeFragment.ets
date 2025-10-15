@@ -9,6 +9,10 @@ import DbUtil from '../../util/DbUtil'
 import emitter from '@ohos.events.emitter'
 import EventUtil from '../../util/EventUtil'
 import { Path_Detail } from '../DetailPage'
+import PreferencesUtil from '../../util/PreferencesUtil';
+import { http } from '@kit.NetworkKit';
+import { BusinessError } from '@kit.BasicServicesKit';
+import List from '@ohos.util.List';
 
 @Preview
 @Entry
@@ -21,12 +25,76 @@ export struct HomeFragment {
   // 输入框中的搜索关键字，未使用状态装饰避免频繁刷新
   searchKeyStr: string = ''
   // 首页默认展示的数据列表，从内置数据源初始化
-  @State dataList: Array<Food> = MyData.homeListData
+  @State dataList: Array<Food> = []
   // 搜索结果列表，切换搜索状态后用于替换展示
   @State searchList: Array<Food> = []
+  @State username: string = "unknown";
+
+  async fetchGoodList() {
+
+
+    // 创建请求对象
+    const httpRequest = http.createHttp()
+    httpRequest.request('http://10.34.82.240:8800/api/items', {
+      method: http.RequestMethod.GET,
+      header: { 'Content-Type': 'application/json' },
+
+    },
+      // 请求完成（不管成功还是失败）都调用的回调函数
+      (err: BusinessError, data: http.HttpResponse) => {
+        if (!err) {
+          // 如果err无值代表请求成功，打印响应体
+          console.info('Result:' + JSON.stringify(data.result));
+
+          if (JSON.parse(data.result.toString())["code"] != "0") {
+            promptAction.showToast({
+              message: JSON.parse(data.result.toString())["msg"],
+              duration: 1000,
+              bottom: '360vp'
+            })
+            return
+          }
+
+          let list : List<object>= JSON.parse(data.result.toString())["data"];
+          for (const item of list) {
+            let food : Food= {
+              price: item['price'],
+              id_: '',
+              publish_u_id: '',
+              own_u_id: '',
+              name: item['name'],
+              people_want: item['people_want'],
+              image_urls: "http://10.34.82.240:8800"+item['image_urls']
+            }
+            this.dataList.push(food);
+          }
+          console.log("aaaa:"+JSON.parse(data.result.toString())["data"])
+          // 销毁请求对象
+          httpRequest.destroy()
+
+
+          return;
+        }
+        Toast.show(err.message)
+        console.error(err.message);
+
+      })
+  }
 
   //每次都执行
   async aboutToAppear() {
+
+    await this.fetchGoodList();
+
+    const userName: string = await PreferencesUtil.getStringPreference('user_name', '');
+
+    // 更新状态
+    if (userName.trim() === "") {
+      this.username = 'Guest';
+    } else {
+      this.username = userName;
+    }
+
     console.log('zushiyekeji HomeFragment aboutToAppear')
     // EventUtil.register(0, async (res)=>{
 
@@ -38,8 +106,8 @@ export struct HomeFragment {
     this.searchKeyStr = ''
     // 从本地数据库查询最新的商品数据，保持展示与数据库同步
     //查询最新的数据库数据
-    let l: Array<Food> = await DbUtil.queryFoodList()
-    this.dataList = l
+    // let l: Array<Food> = await DbUtil.queryFoodList()
+    // this.dataList = l
     // 回到常规模式，先展示默认列表
     this.isSearchState = false
     // 清空上一轮搜索结果
@@ -177,7 +245,7 @@ export struct HomeFragment {
   userBuilder() {
     // 欢迎语区域展示用户昵称和快捷文案
     Row() {
-      Text('你好，祖师爷科技')
+      Text('你好，' + this.username)
         .fontColor(Color.Black)
         .fontSize(18)
         .fontWeight(FontWeight.Medium)
@@ -259,7 +327,7 @@ export struct HomeFragment {
         (itemData: Food, index: number) => {
           FlowItem() {
             Column() {
-              Image(itemData.icon_url)
+              Image(itemData.image_urls)
                 .width('100%')
                 .height(index == 2 ? 100 : 150)
                 .borderRadius(10)
@@ -269,11 +337,11 @@ export struct HomeFragment {
                   .margin({ top: 10 })
                 Row() {
                   //价格
-                  Text('¥ ' + itemData.now_price)
+                  Text('¥ ' + itemData.price)
                     .fontColor(Color.Red).fontSize(14)
                     .fontWeight(600)
                   //已售
-                  Text(`${itemData.want_count}想要`)
+                  Text(`${itemData.people_want}想要`)
                     .fontColor('#ff696868').fontSize(12)
                     .margin({ left: 10 })
                 }
@@ -324,7 +392,9 @@ export struct HomeFragment {
               align: VerticalAlign.Center
             }
           })
-        Image($r('app.media.close')).width(30).height(30)
+        Image($r('app.media.close'))
+          .width(30)
+          .height(30)
           .alignRules({
             right: {
               anchor: '__container__',
@@ -336,7 +406,7 @@ export struct HomeFragment {
             }
           })
           .margin({ right: 15 })
-          .onClick(()=>{
+          .onClick(() => {
             // 关闭搜索层并恢复默认列表
             this.searchList = []
             this.isSearchState = false
@@ -349,7 +419,7 @@ export struct HomeFragment {
           (itemData: Food, index: number) => {
             FlowItem() {
               Column() {
-                Image(itemData.icon_url)
+                Image(itemData.image_urls)
                   .width('100%')
                   .height(index == 2 ? 100 : 150)
                   .borderRadius(10)
