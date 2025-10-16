@@ -3,6 +3,7 @@ import PreferencesUtil from '../util/PreferencesUtil';
 import { Path_Login } from './LoginPage';
 import { Path_Main } from './MainPage';
 import { promptAction } from '@kit.ArkUI';
+import { GlobalVariable } from '../util/GlobalVariable';
 
 /**
  * 欢迎页，可以设置倒计时
@@ -42,6 +43,9 @@ struct SplashPage {
     // 欢迎页跳转到登录页，后续可扩展到主页
     const token: string = await PreferencesUtil.getStringPreference('token', '');
     const username: string = await PreferencesUtil.getStringPreference('user_name', '');
+
+    GlobalVariable.user_name=username;
+    GlobalVariable.token=token;
 
     if (token == "") {
       router.pushUrl({

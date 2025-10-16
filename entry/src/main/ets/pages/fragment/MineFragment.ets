@@ -140,6 +140,8 @@ export struct MineFragment {
           .fontColor(Color.White)
           .onClick(() => {
             //router.back()
+            PreferencesUtil.putPreferenceValue('user_name', "")
+            PreferencesUtil.putPreferenceValue('token', "")
             // 使用 replaceUrl 确保退出后无法返回
             router.replaceUrl({
               url: Path_Login

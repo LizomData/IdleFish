@@ -10,6 +10,9 @@ import EventUtil from '../../util/EventUtil'
 import DateUtil from '../../util/DateUtil'
 import PreferenceUtil from '../../util/PreferencesUtil'
 import { preferences } from '@kit.ArkData'
+import { http } from '@kit.NetworkKit'
+import { BusinessError } from '@kit.BasicServicesKit';
+import { GlobalVariable } from '../../util/GlobalVariable'
 
 @Preview
 @Entry
@@ -67,29 +70,73 @@ export struct PublishFragment {
       })
       return
     }
-    // 通过时间戳生成唯一商品ID
-    let goodId = DateUtil.generateOrderCode()
-    let user_id: preferences.ValueType = await PreferenceUtil.getPreferenceValue('user_name', '')
-    // 随机生成想要人数，增加页面活力
-    let wantN = Math.floor(Math.random() * 100)
-    let v: Food = {
-      id_: goodId,
-      publish_u_id: user_id.toString(),
-      own_u_id: '',
-      //名称
-      name: this.tempDes,
-      //
-      people_want: `${wantN}`,
-      //图片
-      image_urls: this.tempImageUrl,
-      //价格
-      price: this.tempPrice,
-    }
-    DbUtil.insertFood(v)
 
-    promptAction.showToast({
-      message: '发布成功！'
-    })
+
+    // 创建请求对象
+    const httpRequest = http.createHttp()
+    httpRequest.request('http://10.34.82.240:8800/api/items/upload', {
+      method: http.RequestMethod.POST,
+      header: { 'Content-Type': 'application/json',
+      "Authorization":GlobalVariable.token,
+      },
+      extraData:JSON.stringify({
+        "name": this.tempDes,
+        "description": this.tempDes,
+        "price": this.tempPrice,
+        "image_url":  this.tempImageUrl,
+        "peole_want": Math.floor(Math.random() * 100)
+      })
+    },
+      // 请求完成（不管成功还是失败）都调用的回调函数
+      (err: BusinessError, data: http.HttpResponse) => {
+        if (!err) {
+          // 如果err无值代表请求成功，打印响应体
+          console.info('Result:' + JSON.stringify(data.result));
+
+          if (JSON.parse(data.result.toString())["code"] != "0") {
+            promptAction.showToast({
+              message: JSON.parse(data.result.toString())["msg"],
+              duration: 1000,
+              bottom: '360vp'
+            })
+            return
+          }
+          promptAction.showToast({
+            message: '发布成功！'
+          })
+
+          // 销毁请求对象
+          httpRequest.destroy()
+
+
+          return;
+        }
+        Toast.show(err.message)
+        console.error(err.message);
+
+      })
+    //
+    // // 通过时间戳生成唯一商品ID
+    // let goodId = DateUtil.generateOrderCode()
+    // let user_id: preferences.ValueType = await PreferenceUtil.getPreferenceValue('user_name', '')
+    // // 随机生成想要人数，增加页面活力
+    // let wantN = Math.floor(Math.random() * 100)
+    // let v: Food = {
+    //   id_: goodId,
+    //   publish_u_id: user_id.toString(),
+    //   own_u_id: '',
+    //   //名称
+    //   name: this.tempDes,
+    //   //
+    //   people_want: `${wantN}`,
+    //   //图片
+    //   image_urls: this.tempImageUrl,
+    //   //价格
+    //   price: this.tempPrice,
+    // }
+    // DbUtil.insertFood(v)
+
+
 
     //清除数据
     this.isClickImageBtn = false

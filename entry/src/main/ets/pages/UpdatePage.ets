@@ -7,6 +7,10 @@ import Food, { RouteParam } from '../model/modle'
 import DbUtil from '../util/DbUtil'
 import PreferenceUtil from '../util/PreferencesUtil'
 import EventUtil from '../util/EventUtil'
+import { http } from '@kit.NetworkKit'
+import { GlobalVariable } from '../util/GlobalVariable'
+import Toast from '../util/Toast'
+import { BusinessError } from '@kit.BasicServicesKit';
 
 
 export const Path_Update = 'pages/UpdatePage'
@@ -44,6 +48,7 @@ export struct UpdatePage {
     this.routeParam = router.getParams() as RouteParam
     this.food = this.routeParam.content as Food
     this.tempImageUrl = this.food.image_urls
+    this.loadImageUrl = this.food.image_urls
     this.tempDes = this.food.name
     this.tempPrice = this.food.price
 
@@ -71,6 +76,51 @@ export struct UpdatePage {
       })
       return
     }
+
+    // 创建请求对象
+    const httpRequest = http.createHttp()
+    httpRequest.request('http://10.34.82.240:8800/api/items/'+this.food.id_, {
+      method: http.RequestMethod.PUT,
+      header: { 'Content-Type': 'application/json',
+        "Authorization":GlobalVariable.token,
+      },
+      extraData:JSON.stringify({
+        "name": this.tempDes,
+        "description": this.tempDes,
+        "price": this.tempPrice,
+        "image_url":  this.tempImageUrl,
+      })
+    },
+      // 请求完成（不管成功还是失败）都调用的回调函数
+      (err: BusinessError, data: http.HttpResponse) => {
+        if (!err) {
+          // 如果err无值代表请求成功，打印响应体
+          console.info('Result:' + JSON.stringify(data.result));
+
+          if (JSON.parse(data.result.toString())["code"] != "0") {
+            promptAction.showToast({
+              message: JSON.parse(data.result.toString())["msg"],
+              duration: 1000,
+              bottom: '360vp'
+            })
+            return
+          }
+          promptAction.showToast({
+            message: '编辑成功！'
+          })
+
+          // 销毁请求对象
+          httpRequest.destroy()
+
+
+          return;
+        }
+        Toast.show(err.message)
+        console.error(err.message);
+
+      })
+return
+
     let goodId = this.food.id_
     if (goodId == '') {
       // 若缺少商品编号则重新生成

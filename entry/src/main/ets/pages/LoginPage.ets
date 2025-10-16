@@ -9,6 +9,7 @@ import PreferencesUtil from './../util/PreferencesUtil';
 import { Path_Main } from './MainPage';
 import { BusinessError } from '@kit.BasicServicesKit';
 import Toast from '../util/Toast';
+import { GlobalVariable } from '../util/GlobalVariable';
 
 export const Path_Login = 'pages/LoginPage'
 
@@ -193,6 +194,8 @@ console.log(JSON.stringify({
 
           PreferencesUtil.putPreferenceValue('user_name', this.user)
           PreferencesUtil.putPreferenceValue('token', JSON.parse(data.result.toString())["data"]["token"])
+          GlobalVariable.token=JSON.parse(data.result.toString())["data"]["token"]
+          GlobalVariable.user_name=this.user
 
 
           // 销毁请求对象
@@ -208,7 +211,7 @@ console.log(JSON.stringify({
           return;
         }
         console.error(err.message);
-
+      Toast.show(err.message);
 
 
       })

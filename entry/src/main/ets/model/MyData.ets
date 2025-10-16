@@ -213,7 +213,7 @@ class MyData {
     },
   ]
   // 图片占位资源
-  detailImageUrl = 'https://img.alicdn.com/imgextra/i4/O1CN01IWe4SW1zz7svQaW9d_!!6000000006784-2-tps-480-672.png_450x10000.jpg_.webp'
+  detailImageUrl = 'http://10.34.82.240:8800/uploads/upload.png'
 }
 
 const v = new MyData()

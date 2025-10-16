@@ -55,20 +55,21 @@ export struct HomeFragment {
             return
           }
 
-          let list : List<object>= JSON.parse(data.result.toString())["data"];
+          let list: List<object> = JSON.parse(data.result.toString())["data"];
           for (const item of list) {
-            let food : Food= {
+            let food: Food = {
               price: item['price'],
               id_: '',
               publish_u_id: '',
               own_u_id: '',
               name: item['name'],
               people_want: item['people_want'],
-              image_urls: "http://10.34.82.240:8800"+item['image_urls']
+              image_urls: String(item['image_urls']).includes("http") ? item['image_urls'] :
+                "http://10.34.82.240:8800" + item['image_urls']
             }
             this.dataList.push(food);
           }
-          console.log("aaaa:"+JSON.parse(data.result.toString())["data"])
+          console.log("aaaa:" + JSON.parse(data.result.toString())["data"])
           // 销毁请求对象
           httpRequest.destroy()
 

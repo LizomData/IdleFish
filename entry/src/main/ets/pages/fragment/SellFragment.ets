@@ -5,6 +5,11 @@ import Food, { ItemType, RouteParam, TabBean } from '../../model/modle'
 import DbUtil from '../../util/DbUtil'
 import { Path_Update } from '../UpdatePage'
 import EventUtil from '../../util/EventUtil'
+import { http } from '@kit.NetworkKit'
+import { BusinessError } from '@kit.BasicServicesKit';
+import { GlobalVariable } from '../../util/GlobalVariable'
+import List from '@ohos.util.List';
+import Toast from '../../util/Toast'
 
 @Preview
 @Entry
@@ -15,9 +20,64 @@ export struct SellFragment {
   // 当前用户发布的数据列表
   @State dataList: Array<Food> = []
 
-  // 进入页面执行
+  async fetchGoodList() {
+
+
+    // 创建请求对象
+    const httpRequest = http.createHttp()
+    httpRequest.request('http://10.34.82.240:8800/api/items_my', {
+      method: http.RequestMethod.GET,
+      header: { 'Content-Type': 'application/json',
+        "Authorization":GlobalVariable.token,
+      },
+
+    },
+      // 请求完成（不管成功还是失败）都调用的回调函数
+      (err: BusinessError, data: http.HttpResponse) => {
+        if (!err) {
+          // 如果err无值代表请求成功，打印响应体
+          console.info('Result:' + JSON.stringify(data.result));
+
+          if (JSON.parse(data.result.toString())["code"] != "0") {
+            promptAction.showToast({
+              message: JSON.parse(data.result.toString())["msg"],
+              duration: 1000,
+              bottom: '360vp'
+            })
+            return
+          }
+
+          let list:  List<object> = JSON.parse(data.result.toString())["data"];
+          for (const item of list) {
+            let food: Food = {
+              price: String(item['price']),
+              id_: String(item['id']),
+              publish_u_id: '',
+              own_u_id: '',
+              name: item['name'],
+              people_want: item['people_want'],
+              image_urls: String(item['image_urls']).includes("http") ? item['image_urls'] :
+                "http://10.34.82.240:8800" + item['image_urls']
+            }
+            this.dataList.push(food);
+          }
+          console.log("aaaa:" + JSON.parse(data.result.toString())["data"])
+          // 销毁请求对象
+          httpRequest.destroy()
+
+
+          return;
+        }
+        Toast.show(err.message)
+        console.error(err.message);
+
+      })
+  }
+
+  //每次都执行
   async aboutToAppear() {
-    console.log('zushiyekeji SellFragment ')
+
+    await this.fetchGoodList();
 
     // 初始化时查询当前用户发布的所有商品
     this.dataList = await DbUtil.queryFoodListMePublish()
@@ -37,15 +97,7 @@ export struct SellFragment {
   goUpdatePage(item: Food) {
     const p = new RouteParam()
     p.content = item
-    //回传数据 回调
-    // 注册事件回调，更新成功后刷新数据
-    EventUtil.register(1, async ()=>{
-      console.log('zushiyekeji goUpdatePage 回调')
 
-      this.dataList = await DbUtil.queryFoodListMePublish()
-
-      EventUtil.off(1)
-    })
     router.pushUrl({
       url: Path_Update,
       params: p,
@@ -73,11 +125,11 @@ export struct SellFragment {
                     .margin({ top: 10 })
                   Row() {
                     //价格
-                    Text('¥ ' + itemData.now_price)
+                    Text('¥ ' + itemData.price)
                       .fontColor(Color.Red).fontSize(14)
                       .fontWeight(600)
                     //已售
-                    Text(`${itemData.want_count}想要`)
+                    Text(`${itemData.people_want}想要`)
                       .fontColor('#ff696868').fontSize(12)
                       .margin({ left: 10 })
                   }
