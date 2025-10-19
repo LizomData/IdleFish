@@ -79,7 +79,7 @@ export struct UpdatePage {
 
     // 创建请求对象
     const httpRequest = http.createHttp()
-    httpRequest.request('http://10.34.82.240:8800/api/items/'+this.food.id_, {
+    httpRequest.request(GlobalVariable.server_ip+'/api/items/'+this.food.id_, {
       method: http.RequestMethod.PUT,
       header: { 'Content-Type': 'application/json',
         "Authorization":GlobalVariable.token,

@@ -25,7 +25,7 @@ export struct SellFragment {
 
     // 创建请求对象
     const httpRequest = http.createHttp()
-    httpRequest.request('http://10.34.82.240:8800/api/items_my', {
+    httpRequest.request(GlobalVariable.server_ip+'/api/items_my', {
       method: http.RequestMethod.GET,
       header: { 'Content-Type': 'application/json',
         "Authorization":GlobalVariable.token,

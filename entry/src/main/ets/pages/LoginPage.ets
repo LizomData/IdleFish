@@ -163,7 +163,7 @@ console.log(JSON.stringify({
 }))
     // 创建请求对象
     const httpRequest = http.createHttp()
-    httpRequest.request('http://10.34.82.240:8800/api/login', {
+    httpRequest.request(GlobalVariable.server_ip+'/api/login', {
       method:http.RequestMethod.POST,
       header: { 'Content-Type': 'application/json' },
       // 参数

@@ -1,3 +1,4 @@
+import { GlobalVariable } from "../util/GlobalVariable";
 import Food, { FindItemBean, ItemType, MineItem, NavigationTabBean, TabBean } from "./modle";
 
 // 项目中的静态数据集中管理，便于统一维护
@@ -213,7 +214,7 @@ class MyData {
     },
   ]
   // 图片占位资源
-  detailImageUrl = 'http://10.34.82.240:8800/uploads/upload.png'
+  detailImageUrl = GlobalVariable.server_ip+'/uploads/upload.png'
 }
 
 const v = new MyData()

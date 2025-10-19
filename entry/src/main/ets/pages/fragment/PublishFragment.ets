@@ -74,7 +74,7 @@ export struct PublishFragment {
 
     // 创建请求对象
     const httpRequest = http.createHttp()
-    httpRequest.request('http://10.34.82.240:8800/api/items/upload', {
+    httpRequest.request(GlobalVariable.server_ip+'/api/items/upload', {
       method: http.RequestMethod.POST,
       header: { 'Content-Type': 'application/json',
       "Authorization":GlobalVariable.token,

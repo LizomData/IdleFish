@@ -13,6 +13,7 @@ import PreferencesUtil from '../../util/PreferencesUtil';
 import { http } from '@kit.NetworkKit';
 import { BusinessError } from '@kit.BasicServicesKit';
 import List from '@ohos.util.List';
+import { GlobalVariable } from '../../util/GlobalVariable';
 
 @Preview
 @Entry
@@ -35,7 +36,7 @@ export struct HomeFragment {
 
     // 创建请求对象
     const httpRequest = http.createHttp()
-    httpRequest.request('http://10.34.82.240:8800/api/items', {
+    httpRequest.request(GlobalVariable.server_ip+'/api/items', {
       method: http.RequestMethod.GET,
       header: { 'Content-Type': 'application/json' },
 
@@ -59,7 +60,7 @@ export struct HomeFragment {
           for (const item of list) {
             let food: Food = {
               price: item['price'],
-              id_: '',
+              id_: item['id'],
               publish_u_id: '',
               own_u_id: '',
               name: item['name'],

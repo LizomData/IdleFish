@@ -14,6 +14,11 @@ export const Path_splash = 'pages/SplashPage'
 @Entry
 @Component
 struct SplashPage {
+
+  async  aboutToAppear()  {
+    GlobalVariable.server_ip='your_server_ip';
+  }
+
   //倒计时
   @State countDownSeconds: number = 5;
   private timeId: number = 0;
@@ -46,6 +51,7 @@ struct SplashPage {
 
     GlobalVariable.user_name=username;
     GlobalVariable.token=token;
+
 
     if (token == "") {
       router.pushUrl({

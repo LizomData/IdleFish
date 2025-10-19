@@ -1,13 +1,16 @@
 // 详情页所需的路由、弹窗及数据工具
 import router from '@ohos.router';
 import promptAction from '@ohos.promptAction';
-import { JSON } from '@kit.ArkTS';
 import { m as saveData } from 'ohbuild';
-import DbUtil from '../util/DbUtil';
 import Food, { RouteParam } from '../model/modle';
 import MyData from '../model/MyData';
 import { preferences } from '@kit.ArkData';
 import PreferenceUtil from '../util/PreferencesUtil';
+import { http } from '@kit.NetworkKit';
+import { GlobalVariable } from '../util/GlobalVariable';
+import { BusinessError } from '@kit.BasicServicesKit';
+import Toast from '../util/Toast';
+
 
 export const Path_Detail = 'pages/DetailPage'
 
@@ -34,8 +37,48 @@ struct ProductDetailPage {
     promptAction.showToast({
       message: '购买成功！'
     })
-    this.food.own_u_id = this.user_id.toString()
-    DbUtil.updateFood(this.food)
+    // 创建请求对象
+    const httpRequest = http.createHttp()
+    httpRequest.request(GlobalVariable.server_ip+'/api/order/create', {
+      method: http.RequestMethod.POST,
+      header: { 'Content-Type': 'application/json',
+        "Authorization":GlobalVariable.token,
+      },
+      extraData:JSON.stringify({
+        "item_id":Number(this.food.id_)
+      })
+
+    },
+      // 请求完成（不管成功还是失败）都调用的回调函数
+      (err: BusinessError, data: http.HttpResponse) => {
+        if (!err) {
+          // 如果err无值代表请求成功，打印响应体
+          console.info('Result:' + JSON.stringify(data.result));
+
+          if (JSON.parse(data.result.toString())["code"] != "0") {
+            promptAction.showToast({
+              message: JSON.parse(data.result.toString())["msg"],
+              duration: 1000,
+              bottom: '360vp'
+            })
+            return
+          }
+
+          Toast.show("购买成功: order_id为"+JSON.parse(data.result.toString())["data"]['order_id'].toString())
+          // 销毁请求对象
+          httpRequest.destroy()
+
+
+          return;
+        }
+        Toast.show(err.message)
+        console.error(err.message);
+
+      })
+
+
+    // this.food.own_u_id = this.user_id.toString()
+    // DbUtil.updateFood(this.food)
     router.back()
   }
 
