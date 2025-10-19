@@ -3,6 +3,10 @@ import router from '@ohos.router';
 // 导入弹窗
 import promptAction from '@ohos.promptAction';
 import PreferencesUtil from './../util/PreferencesUtil';
+import { http } from '@kit.NetworkKit';
+import { GlobalVariable } from '../util/GlobalVariable';
+import { BusinessError } from '@kit.BasicServicesKit';
+import Toast from '../util/Toast';
 
 export const Path_Regist = 'pages/RegistPage'
 
@@ -52,7 +56,7 @@ struct RegistPage {
           .margin({ bottom: 30 })
 
         // 用户名和密码输入框
-        TextInput({ placeholder: '请输入手机号' })
+        TextInput({ placeholder: '请输入账号' })
           .inputStyle()// 公共样式函数
           .maxLength(11)
           .onChange(data => { // 输入框的值发生变化时，触发回调，data代表输入的内容
@@ -104,7 +108,7 @@ struct RegistPage {
       || this.password2 == '') {
       // 不能跳转，同时提示
       promptAction.showToast({
-        message: '手机号、密码、再次密码不能为空不能为空',
+        message: '账号、密码、再次密码不能为空不能为空',
         duration: 1000,
         bottom: '360vp'
       })
@@ -118,16 +122,56 @@ struct RegistPage {
       })
       return
     }
-    // 将用户账号与密码持久化到偏好存储
-    PreferencesUtil.putPreferenceValue('user_name', this.userName)
-    PreferencesUtil.putPreferenceValue('pwd', this.password)
-    promptAction.showToast({
-      message: '注册成功',
-      duration: 1000,
-      bottom: '360vp'
-    })
-    // 注册完成后返回登录页
-    router.back()
+
+    // 创建请求对象
+    const httpRequest = http.createHttp()
+    httpRequest.request(GlobalVariable.server_ip+'/api/register', {
+      method: http.RequestMethod.POST,
+      header: { 'Content-Type': 'application/json',
+      },
+      extraData:JSON.stringify({
+        "username":this.userName,
+        "password":this.password
+      })
+
+    },
+      // 请求完成（不管成功还是失败）都调用的回调函数
+      (err: BusinessError, data: http.HttpResponse) => {
+        if (!err) {
+          // 如果err无值代表请求成功，打印响应体
+          console.info('Result:' + JSON.stringify(data.result));
+
+          if (JSON.parse(data.result.toString())["code"] != "0") {
+            promptAction.showToast({
+              message: JSON.parse(data.result.toString())["msg"],
+              duration: 1000,
+              bottom: '360vp'
+            })
+            return
+          }
+          promptAction.showToast({
+            message: '注册成功',
+            duration: 1000,
+            bottom: '360vp'
+          })
+
+          // 注册完成后返回登录页
+          router.back()
+          // 销毁请求对象
+          httpRequest.destroy()
+
+
+          return;
+        }
+        Toast.show(err.message)
+        console.error(err.message);
+
+      })
+    // // 将用户账号与密码持久化到偏好存储
+    // PreferencesUtil.putPreferenceValue('user_name', this.userName)
+    // PreferencesUtil.putPreferenceValue('pwd', this.password)
+
+
   }
 }
 
