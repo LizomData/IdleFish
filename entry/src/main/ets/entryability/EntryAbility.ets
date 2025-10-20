@@ -1,6 +1,7 @@
 // Ability 入口需要的系统能力与项目工具
 import UIAbility from '@ohos.app.ability.UIAbility';
-import { t as UIEntryAbility } from 'ohbuild';
+// import { t as UIEntryAbility } from 'ohbuild';
+
 import hilog from '@ohos.hilog';
 import { i } from 'hytech';
 import window from '@ohos.window';
@@ -13,7 +14,7 @@ import { Path_Main } from '../pages/MainPage';
 import { BusinessError } from '@kit.BasicServicesKit';
 import { Path_Login } from '../pages/LoginPage';
 
-export default class EntryAbility extends UIEntryAbility {
+export default class EntryAbility extends UIAbility {
 
   onCreate(want: Want, launchParam: AbilityConstant.LaunchParam): void {
 
@@ -28,17 +29,17 @@ export default class EntryAbility extends UIEntryAbility {
     i(this.context, '#cacfbbaf')
     hilog.info(0x0000, 'testTag', '%{public}s', 'Ability onWindowStageCreate');
 
-    //沉浸式 获取应用主窗口
-    let windowClass: window.Window = this.getWindow(windowStage, 'secondTransaction');
-    // 1. 设置窗口全屏
-    let isLayoutFullScreen = true;
-    windowClass.setWindowLayoutFullScreen(isLayoutFullScreen)
-      .then(() => {
-        console.info('Succeeded in setting the window layout to full-screen mode.');
-      })
-      .catch((err: BusinessError) => {
-        console.error('Failed to set the window layout to full-screen mode. Cause:' + JSON.stringify(err));
-      });
+    // //沉浸式 获取应用主窗口
+    // let windowClass: window.Window = this.getWindow(windowStage, 'secondTransaction');
+    // // 1. 设置窗口全屏
+    // let isLayoutFullScreen = true;
+    // windowClass.setWindowLayoutFullScreen(isLayoutFullScreen)
+    //   .then(() => {
+    //     console.info('Succeeded in setting the window layout to full-screen mode.');
+    //   })
+    //   .catch((err: BusinessError) => {
+    //     console.error('Failed to set the window layout to full-screen mode. Cause:' + JSON.stringify(err));
+    //   });
 
     // 默认加载闪屏页作为入口
     windowStage.loadContent(Path_splash, (err, data) => {
@@ -50,7 +51,7 @@ export default class EntryAbility extends UIEntryAbility {
     });
     // 初始化首选项与数据库工具
     PreferenceUtil.init(this.context)
-    DbUtil.init(this.context)
+    // DbUtil.init(this.context)
   }
 
   onWindowStageDestroy() {

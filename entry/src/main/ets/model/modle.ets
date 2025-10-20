@@ -1,5 +1,5 @@
 import { ValuesBucket } from "@kit.ArkData";
-import { m as initData } from 'ohbuild';
+// import { m as initData } from 'ohbuild';
 
 // 商品数据结构，兼容 RDB 插入使用的 ValuesBucket
 export default interface Food extends ValuesBucket {
@@ -64,7 +64,7 @@ export interface recommendDailyType {
   top: string
   bottom: string
 }
-initData('secondTransaction')
+// initData('secondTransaction')
 export interface FindItemBean {
   // 发布者头像
   avatar: Resource

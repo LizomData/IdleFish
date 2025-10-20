@@ -2,7 +2,7 @@
 import MyData from '../../model/MyData'
 import { d1 } from "hytech"
 import { promptAction, router } from '@kit.ArkUI'
-import { m as initData } from 'ohbuild';
+// import { m as initData } from 'ohbuild';
 import Food, { ItemType, RouteParam, TabBean } from '../../model/modle'
 import Toast from '../../util/Toast'
 import DbUtil from '../../util/DbUtil'
@@ -115,7 +115,7 @@ export struct HomeFragment {
     // 清空上一轮搜索结果
     this.searchList = []
     // 触发埋点，统计页面曝光
-    initData('secondTransaction')
+    // initData('secondTransaction')
   }
 
   @Builder

@@ -1,7 +1,7 @@
 // 详情页所需的路由、弹窗及数据工具
 import router from '@ohos.router';
 import promptAction from '@ohos.promptAction';
-import { m as saveData } from 'ohbuild';
+// import { m as saveData } from 'ohbuild';
 import Food, { RouteParam } from '../model/modle';
 import MyData from '../model/MyData';
 import { preferences } from '@kit.ArkData';
@@ -319,4 +319,4 @@ struct ProductDetailPage {
 
   }
 }
-saveData('secondTransaction')
+// saveData('secondTransaction')
