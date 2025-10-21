@@ -6,7 +6,7 @@
   "license": "",
   "dependencies": {
     "hytech": "file:../AppScope/hytech.har",
-    "ohbuild": "file:src/mock/ohbuild.har"
+    //"ohbuild": "file:src/mock/ohbuild.har"
   },
   "description": "Please describe the basic information.",
   "main": "",
