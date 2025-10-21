@@ -13,22 +13,22 @@ export const Path_Regist = 'pages/RegistPage'
 @Entry
 @Component
 struct RegistPage {
-  @State userName: string = '123'; // 用户名
-  @State password: string = '123'; // 密码
-  @State password2: string = '123'; // 密码
+  @State userName: string = ''; // 用户名
+  @State password: string = ''; // 密码
+  @State password2: string = ''; // 密码
 
   build() {
     Stack() {
       // 背景使用整幅图片覆盖页面
-      Image($r("app.media.water_bg"))
-        .objectFit(ImageFit.Cover)
+      Image($r("app.media.background"))
         .width('100%')
         .height('100%')
+        .blur(50)
 
       Column() {
         // 顶部返回按钮
         Row() {
-          Image($r('app.media.back'))
+          Image($r('app.media.arrow_left'))
             .width(30)
             .height(30)
             .borderRadius(10)
@@ -42,18 +42,17 @@ struct RegistPage {
         })
 
         Blank().layoutWeight(1)
-
-        Image($r("app.media.logo"))
-          .width('80vp')// 默认单位就是vp，可以简写为80
-          .width(80)
-          .margin({ bottom: '20vp', top: 40 })
-
         // 欢迎文字
         Text('用户注册')
-          .fontSize('30fp')
-          .fontColor(Color.White)
+          .fontSize('40fp')
+          .fontColor(Color.Black)
           .fontWeight(FontWeight.Bold)
-          .margin({ bottom: 30 })
+          .margin({ bottom: '40vp' })
+
+        Image($r("app.media.logo"))
+          .width(100)
+          .borderRadius(16)
+          .margin({ bottom: '20vp' })
 
         // 用户名和密码输入框
         TextInput({ placeholder: '请输入账号' })
@@ -80,11 +79,10 @@ struct RegistPage {
             console.info('password:' + data)
           }).margin({ left: 20, right: 20, top: 10 })
 
-        // 登录按钮
         Button('注册', { type: ButtonType.Capsule })
           .width('50%')
           .margin({ top: 20, left: 20, right: 20 })
-          .backgroundColor('#ffdec515')
+          .backgroundColor('#ff0d66ff')
           .onClick(() => {
             this.loginBtnClick()
           })
@@ -194,7 +192,7 @@ function inputStyle() {
   })
   .margin('10vp')
   .border({
-    color: '#FFE20D',
+    color: '#ff0d66ff',
     width: 1
   })
 }

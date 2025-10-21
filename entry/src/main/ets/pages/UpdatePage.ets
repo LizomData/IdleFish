@@ -112,58 +112,19 @@ export struct UpdatePage {
           // 销毁请求对象
           httpRequest.destroy()
 
-
           return;
         }
         Toast.show(err.message)
         console.error(err.message);
 
       })
-return
-
-    let goodId = this.food.id_
-    if (goodId == '') {
-      // 若缺少商品编号则重新生成
-      goodId = DateUtil.generateOrderCode()
-    }
-    let own_u_id = this.food.own_u_id
-    if (own_u_id == '') {
-      own_u_id = ''
-    }
-    // 获取当前登录用户作为发布者
-    let user_id: preferences.ValueType = await PreferenceUtil.getPreferenceValue('user_name', '')
-    // 维持想要人数的随机值
-    let wantN = Math.floor(Math.random() * 100)
-    let v: Food = {
-      id_: goodId,
-      publish_u_id: user_id.toString(),
-      own_u_id: own_u_id,
-      //名称
-      name: this.tempDes,
-      //
-      people_want: `${wantN}`,
-      //图片
-      image_urls: this.tempImageUrl,
-      //价格
-      price: this.tempPrice,
-    }
-    // 更新数据库后通过事件通知刷新
-    DbUtil.updateFood(v).then(()=>{
-      //数据库修改完毕后发送消息到前一个页面
-      EventUtil.send(1)
-    })
-
-    promptAction.showToast({
-      message: '编辑成功！'
-    })
-
-    router.back()
+    return
   }
 
   build() {
     Column() {
       Row() {
-        Image($r('app.media.back')).width(20).height(25)
+        Image($r('app.media.arrow_left')).width(20).height(25)
           .margin({
             left: 16
           })
@@ -186,14 +147,13 @@ return
 
       Image(this.loadImageUrl)
         .onError(() => {
-          // 图片加载失败时回退默认占位图
           this.loadImageUrl = MyData.detailImageUrl
         })
         .onFinish(() => {
-          console.log('zushiyekeji img onFinish ')
+          console.log('img onFinish ')
         })
         .onComplete(() => {
-          console.log('zushiyekeji img onComplete ')
+          console.log('img onComplete ')
           //this.islLoadImageSuccess = 1
         })
         .height(300)
@@ -206,7 +166,6 @@ return
           .textAlign(TextAlign.Start)
           .backgroundColor(Color.Transparent)
           .onChange((value: string, previewText?: PreviewText) => {
-            // 先暂存用户输入，待确认后再应用
             this.inputImageUrl = value
           })
           .layoutWeight(1)
@@ -214,7 +173,7 @@ return
         Text('确定')
           .fontSize(16)
           .fontColor(Color.White)
-          .backgroundColor('#EB5E1A')
+          .backgroundColor('#fffd0000')
           .margin({ right: 16 })
           .padding({
             left: 14,
@@ -224,7 +183,6 @@ return
           })
           .borderRadius(13)
           .onClick(() => {
-            // 确认图片后赋值到展示变量
             this.isClickImageBtn = true
             this.tempImageUrl = this.inputImageUrl
             this.loadImageUrl = this.inputImageUrl
@@ -232,7 +190,7 @@ return
       }
       .margin({ top: 10 })
       .borderRadius(20)
-      .borderColor($r('app.color.zhuti'))
+      .borderColor('#ff0d66ff')
       .borderWidth(1)
 
       Row() {
@@ -247,7 +205,7 @@ return
       }
       .margin({ top: 10 })
       .borderRadius(20)
-      .borderColor($r('app.color.zhuti'))
+      .borderColor('#ff0d66ff')
       .borderWidth(1)
 
       Row() {
@@ -256,27 +214,25 @@ return
           .type(InputType.NUMBER_DECIMAL)
           .backgroundColor(Color.Transparent)
           .onChange((value: string, previewText?: PreviewText) => {
-            // 同步价格
             this.tempPrice = value
           })
           .layoutWeight(1)
       }
       .margin({ top: 10 })
       .borderRadius(20)
-      .borderColor($r('app.color.zhuti'))
+      .borderColor('#ff0d66ff')
       .borderWidth(1)
 
       Text('发布')
         .fontSize(20)
         .fontColor(Color.White)
-        .backgroundColor('#FFE20D')
+        .backgroundColor('#ff0d66ff')
         .margin({ left: 20, right: 20, top: 40 })
         .width('100%')
         .height(40)
         .textAlign(TextAlign.Center)
         .borderRadius(30)
         .onClick(() => {
-          // 提交编辑结果
           this.publishBtn()
         })
 

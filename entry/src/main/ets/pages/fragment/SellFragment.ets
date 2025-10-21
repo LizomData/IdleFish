@@ -57,7 +57,7 @@ export struct SellFragment {
               name: item['name'],
               people_want: item['people_want'],
               image_urls: String(item['image_urls']).includes("http") ? item['image_urls'] :
-                "http://10.34.82.240:8800" + item['image_urls']
+                GlobalVariable.server_ip + item['image_urls']
             }
             this.dataList.push(food);
           }
@@ -142,7 +142,7 @@ export struct SellFragment {
                 this.goUpdatePage(itemData)
               })
 
-              Image($r('app.media.delete'))
+              Image($r('app.media.delete_left_fill'))
                 .width(30)
                 .height(30)
                 .margin({ right: 5 })
@@ -172,11 +172,14 @@ export struct SellFragment {
 
   build() {
     Column() {
-      // 顶部标题与说明
-      Text('我发布的')
-        .fontWeight(FontWeight.Bold)
-        .fontSize(20)
-        .margin({ top: 50, bottom: 10 })
+      Row() {
+        Text('我卖出的')
+          .fontSize(24)
+          .padding(10)
+          .fontWeight(FontWeight.Medium)
+          .margin({ right: 10, top: 15, bottom: 10 })
+      }
+      .width('95%')
       Scroll() {
         // 列表区域支持滚动查看全部商品
         this.bottomBuilder()
