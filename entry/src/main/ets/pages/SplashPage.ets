@@ -16,7 +16,7 @@ export const Path_splash = 'pages/SplashPage'
 struct SplashPage {
 
   async  aboutToAppear()  {
-    GlobalVariable.server_ip='http://10.33.25.4:8800';
+    GlobalVariable.server_ip='http://10.34.82.240:8800';
   }
 
   //倒计时
