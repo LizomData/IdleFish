@@ -87,7 +87,7 @@ struct MainPage {
             .width(21)
             .height(21)
             .backgroundColor(this.curIndex == 0 ? $r('app.color.zhuti') : null)
-            .borderRadius(10)
+            .borderRadius(20)
           Text(MyData.bottomBeanList[0].title)
             .fontColor(this.curIndex == 0 ? Color.Black : Color.Black)
             .fontSize(13)
@@ -184,8 +184,7 @@ struct MainPage {
     .height('100%')
     .width('100%')
     .alignContent(Alignment.Bottom)
-
-    // .backgroundColor(Color.Gray)
+    .backgroundColor('#fff1f1f1')
 
   }
 }

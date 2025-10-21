@@ -1,13 +1,9 @@
-// 引入页面展示所需的数据、工具与事件工具类
 import MyData from '../../model/MyData'
 import { d1 } from "hytech"
 import { promptAction, router } from '@kit.ArkUI'
-// import { m as initData } from 'ohbuild';
-import Food, { ItemType, RouteParam, TabBean } from '../../model/modle'
+import Food, { ItemType, RouteParam } from '../../model/modle'
 import Toast from '../../util/Toast'
 import DbUtil from '../../util/DbUtil'
-import emitter from '@ohos.events.emitter'
-import EventUtil from '../../util/EventUtil'
 import { Path_Detail } from '../DetailPage'
 import PreferencesUtil from '../../util/PreferencesUtil';
 import { http } from '@kit.NetworkKit';
@@ -19,15 +15,10 @@ import { GlobalVariable } from '../../util/GlobalVariable';
 @Entry
 @Component
 export struct HomeFragment {
-  // 顶部二级分类当前选中的标签索引
   @State currTabIndex: number = 1
-  // 当前是否处于搜索结果展示状态
   @State isSearchState: boolean = false
-  // 输入框中的搜索关键字，未使用状态装饰避免频繁刷新
   searchKeyStr: string = ''
-  // 首页默认展示的数据列表，从内置数据源初始化
   @State dataList: Array<Food> = []
-  // 搜索结果列表，切换搜索状态后用于替换展示
   @State searchList: Array<Food> = []
   @State username: string = "unknown";
 
@@ -66,7 +57,7 @@ export struct HomeFragment {
               name: item['name'],
               people_want: item['people_want'],
               image_urls: String(item['image_urls']).includes("http") ? item['image_urls'] :
-                "http://10.34.82.240:8800" + item['image_urls']
+                GlobalVariable.server_ip + item['image_urls']
             }
             this.dataList.push(food);
           }
@@ -96,12 +87,7 @@ export struct HomeFragment {
     } else {
       this.username = userName;
     }
-
-    console.log('zushiyekeji HomeFragment aboutToAppear')
-    // EventUtil.register(0, async (res)=>{
-
-    // })
-    //
+    console.log('HomeFragment aboutToAppear')
 
     // 清空旧的搜索关键字，避免返回页面时显示历史输入
     //清空搜索值
@@ -115,14 +101,14 @@ export struct HomeFragment {
     // 清空上一轮搜索结果
     this.searchList = []
     // 触发埋点，统计页面曝光
-    // initData('secondTransaction')
+    //initData('secondTransaction')
   }
 
   @Builder
   searchBuilder() {
     // 搜索区域包含扫描图标、输入框与搜索按钮
     Row() {
-      Image($r('app.media.ic_code'))
+      Image($r('app.media.magnifyingglass'))
         .width(21)
         .margin({ left: 16 })
 
@@ -130,7 +116,6 @@ export struct HomeFragment {
         .textAlign(TextAlign.Start)
         .backgroundColor(Color.Transparent)
         .onChange((value: string, previewText?: PreviewText) => {
-          // 仅记录输入内容，不立即请求数据库
           this.searchKeyStr = value
         })
         .layoutWeight(1)
@@ -138,8 +123,8 @@ export struct HomeFragment {
       Text('搜索')
         .fontSize(16)
         .fontColor(Color.White)
-        .backgroundColor('#EB5E1A')
-        .margin({ right: 16 })
+        .backgroundColor('#ff0d66ff')
+        .margin({ right: 10 })
         .padding({
           left: 14,
           top: 4,
@@ -152,11 +137,9 @@ export struct HomeFragment {
           this.onSearchClick()
         })
     }
-    .margin({ top: 40 })
+    .margin({ top: 10 })
     .borderRadius(20)
-    .borderColor('#ff2b2a2a')
-    .borderWidth(1)
-
+    .backgroundColor(Color.White)
   }
 
   async onSearchClick() {
@@ -165,43 +148,42 @@ export struct HomeFragment {
     this.isSearchState = true
   }
 
-  @Builder
-  topTabBuilder() {
-    // 顶部标签切换区域，使用 Tabs 组件实现
-    Column() {
-      Tabs({
-        barPosition: BarPosition.Start,
-        index: this.currTabIndex
-      }) {
-        ForEach(MyData.topTabBeanList, (item: TabBean, index: number) => {
-          TabContent() {
-
-          }.tabBar(
-            new SubTabBarStyle(item.title)
-              .indicator({
-                color: $r('app.color.green_music')
-              })
-              .labelStyle({
-                unselectedColor: '#000000',
-                selectedColor: $r('app.color.green_music')
-              })
-          )
-        })
-      }
-      .vertical(false)
-      .barHeight(55)
-      .height(55)
-      .width('60%')
-      .onChange((index: number) => {
-        let str = MyData.topTabBeanList[index].title
-        //Toast.show(str)
-        // 顶部频道暂未实现，统一提示敬请期待
-        Toast.show('敬请期待')
-      })
-    }.width('100%').alignItems(HorizontalAlign.Start)
-
-    //.backgroundColor(Color.Red)
-  }
+  //@Builder
+  // topTabBuilder() {
+  //   // 顶部标签切换区域，使用 Tabs 组件实现
+  //   Column() {
+  //     Tabs({
+  //       barPosition: BarPosition.Start,
+  //       index: this.currTabIndex
+  //     }) {
+  //       ForEach(MyData.topTabBeanList, (item: TabBean, index: number) => {
+  //         TabContent() {
+  //
+  //         }.tabBar(
+  //           new SubTabBarStyle(item.title)
+  //             .indicator({
+  //               color: 'ff0d66ff'
+  //             })
+  //             .labelStyle({
+  //               unselectedColor: '#000000',
+  //               selectedColor: '#ff0d66ff'
+  //             })
+  //         )
+  //       })
+  //     }
+  //     .vertical(false)
+  //     .barHeight(55)
+  //     .height(55)
+  //     .width('60%')
+  //     .onChange((index: number) => {
+  //       let str = MyData.topTabBeanList[index].title
+  //       //Toast.show(str)
+  //       Toast.show('敬请期待')
+  //     })
+  //   }.width('100%').alignItems(HorizontalAlign.Start)
+  //
+  //   //.backgroundColor(Color.Red)
+  // }
 
   @Builder
   funcBuilder() {
@@ -212,23 +194,20 @@ export struct HomeFragment {
           Column() {
             Image(itemData.img)
               .height(60)
-              .width('100%')
+              .width(60)
               .borderRadius(10)
             Text(itemData.title)
-              .fontColor(Color.White)
-              .fontSize(13)
+              .fontColor(Color.Black)
+              .fontSize(12)
               .fontWeight(FontWeight.Medium)
               .margin({ top: 4 })
               .borderRadius(5)
-              .backgroundColor($r('app.color.green_music'))
-              .padding({
-                left: 6,
-                right: 6,
-                top: 2,
-                bottom: 2
-              })
+              .padding(2)
           }
           .width('20%')
+          .padding(5)
+          .backgroundColor(Color.White)
+          .borderRadius(16)
           //.height(150)
           .onClick(() => {
             // 入口功能后续补齐，此处给予统一提示
@@ -245,29 +224,26 @@ export struct HomeFragment {
 
   @Builder
   userBuilder() {
-    // 欢迎语区域展示用户昵称和快捷文案
     Row() {
       Text('你好，' + this.username)
         .fontColor(Color.Black)
-        .fontSize(18)
+        .fontSize(20)
         .fontWeight(FontWeight.Medium)
       //.margin({ top: 16 })
 
-      Image($r('app.media.ic_vip'))
-        .width(30)
-        .height(15)
-        .margin({ left: 5 })
-
-      Text('二手交易就在集市')
-        .fontColor(Color.Gray)
-        .fontSize(13)
-        .fontWeight(FontWeight.Medium)
-        .layoutWeight(1)
-        .textAlign(TextAlign.End)
-
-      Image($r('app.media.arrow_to_right'))
-        .width(15).height(15)
-        .margin({ left: 5 })
+      // Image($r('app.media.ic_vip'))
+      //   .width(30)
+      //   .height(15)
+      //   .margin({ left: 5 })
+      // Text('二手交易就在集市')
+      //   .fontColor(Color.Gray)
+      //   .fontSize(13)
+      //   .fontWeight(FontWeight.Medium)
+      //   .layoutWeight(1)
+      //   .textAlign(TextAlign.End)
+      // Image($r('app.media.arrow_to_right'))
+      //   .width(15).height(15)
+      //   .margin({ left: 5 })
     }
     .width('100%')
     .margin({ top: 20, bottom: 5 })
@@ -275,26 +251,26 @@ export struct HomeFragment {
 
   }
 
-  @Builder
-  func2Builder() {
-    // 横向展示推荐位海报
-    Row() {
-      Image($r('app.media.hfunc1'))
-        .width('50%')//.objectFit(ImageFit.Fill)
-        .height(90).borderRadius(10)
-      Image($r('app.media.hfunc2'))
-        .width('20%')
-        .height(90).borderRadius(10)
-        .margin({ left: 10 })
-      Image($r('app.media.hfunc3'))
-        .width('20%')
-        .height(90).borderRadius(10)
-        .margin({ left: 10 })
-    }
-    .width('100%')
-    .margin({ top: 10 })
-
-  }
+  // @Builder
+  // func2Builder() {
+  //   // 横向展示推荐位海报
+  //   Row() {
+  //     Image($r('app.media.hfunc1'))
+  //       .width('50%')//.objectFit(ImageFit.Fill)
+  //       .height(90).borderRadius(10)
+  //     Image($r('app.media.hfunc2'))
+  //       .width('20%')
+  //       .height(90).borderRadius(10)
+  //       .margin({ left: 10 })
+  //     Image($r('app.media.hfunc3'))
+  //       .width('20%')
+  //       .height(90).borderRadius(10)
+  //       .margin({ left: 10 })
+  //   }
+  //   .width('100%')
+  //   .margin({ top: 10 })
+  //
+  // }
 
   // title显示
   @Builder
@@ -302,17 +278,17 @@ export struct HomeFragment {
     // 通用标题栏组件，统一控制主标题与更多按钮的样式
     Row() {
       Text(title)
-        .fontColor($r('app.color.black1'))
+        .fontColor(Color.Black)
         .fontSize(20)
         .fontWeight(FontWeight.Medium)
       //.fontColor($r("app.color.fuzhu2"))
       //.fontColor($r("app.color.white"))
 
-      Text('更多')
-        .margin({ right: 10 })
-        .fontWeight(FontWeight.Regular)
-        .fontSize(14)
-        .fontColor($r('app.color.black1'))
+      // Text('更多')
+      //   .margin({ right: 10 })
+      //   .fontWeight(FontWeight.Regular)
+      //   .fontSize(14)
+      //   .fontColor($r('app.color.black1'))
       //.fontColor($r("app.color.white"))
     }
     //.backgroundColor(Color.Red)
@@ -323,7 +299,6 @@ export struct HomeFragment {
 
   @Builder
   bottomBuilder() {
-    //渲染商品列表数据
     WaterFlow({}) {
       ForEach(!this.isSearchState ? this.dataList : this.searchList,
         (itemData: Food, index: number) => {
@@ -394,7 +369,7 @@ export struct HomeFragment {
               align: VerticalAlign.Center
             }
           })
-        Image($r('app.media.close'))
+        Image($r('app.media.xmark'))
           .width(30)
           .height(30)
           .alignRules({
@@ -474,17 +449,19 @@ export struct HomeFragment {
       Scroll() {
         if (!this.isSearchState) {
           Column() {
-
+            Row() {
+              Text("首页")
+                .fontSize(24)
+                .padding(10)
+                .fontWeight(FontWeight.Medium)
+            }
+            .width('100%')
             this.searchBuilder()
-            this.topTabBuilder()
-
-            this.funcBuilder()
-
+            // this.topTabBuilder()
             this.userBuilder()
-            this.func2Builder()
-
-            this.titleBuilder('最近上新')
-
+            this.funcBuilder()
+            // this.func2Builder()
+            this.titleBuilder('为你推荐')
             this.bottomBuilder()
           }
           .padding(15)

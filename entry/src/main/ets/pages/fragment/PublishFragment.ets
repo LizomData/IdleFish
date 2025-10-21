@@ -155,7 +155,7 @@ export struct PublishFragment {
     Column() {
       // 页面标题
       Text('发布宝贝')
-        .fontColor($r('app.color.black1'))
+        .fontColor(Color.Black)
         .fontSize(20)
         .fontWeight(FontWeight.Medium)
         .margin({ top: 40 })
@@ -165,10 +165,10 @@ export struct PublishFragment {
           this.loadImageUrl = MyData.detailImageUrl
         })
         .onFinish(()=>{
-          console.log('zushiyekeji img onFinish ')
+          console.log(' img onFinish ')
         })
         .onComplete(()=>{
-          console.log('zushiyekeji img onComplete ')
+          console.log(' img onComplete ')
           //this.islLoadImageSuccess = 1
         })
         .height(300)
@@ -189,8 +189,8 @@ export struct PublishFragment {
         Text('确定')
           .fontSize(16)
           .fontColor(Color.White)
-          .backgroundColor('#EB5E1A')
-          .margin({ right: 16 })
+          .backgroundColor('#ffff0000')
+          .margin({ right: 10 })
           .padding({
             left: 14,
             top: 4,
@@ -205,10 +205,10 @@ export struct PublishFragment {
             this.loadImageUrl = this.inputImageUrl
           })
       }
-      .margin({ top: 10 })
+      .margin({ top: 20, left: 10, right: 10 })
       .borderRadius(20)
-      .borderColor($r('app.color.zhuti'))
-      .borderWidth(1)
+      //.borderWidth(1)
+      .backgroundColor(Color.White)
 
       Row() {
         TextInput({ text: this.tempDes, placeholder: '请输入商品名称或者描述' })
@@ -220,10 +220,10 @@ export struct PublishFragment {
           })
           .layoutWeight(1)
       }
-      .margin({ top: 10 })
+      .margin({ top: 20, left: 10, right: 10 })
       .borderRadius(20)
-      .borderColor($r('app.color.zhuti'))
-      .borderWidth(1)
+      //.borderWidth(1)
+      .backgroundColor(Color.White)
 
       Row() {
         TextInput({ text: this.tempPrice, placeholder: '请输入商品价格' })
@@ -236,22 +236,21 @@ export struct PublishFragment {
           })
           .layoutWeight(1)
       }
-      .margin({ top: 10 })
+      .margin({ top: 20, left: 10, right: 10 })
       .borderRadius(20)
-      .borderColor($r('app.color.zhuti'))
-      .borderWidth(1)
+      //.borderWidth(1)
+      .backgroundColor(Color.White)
 
       Text('发布')
         .fontSize(20)
         .fontColor(Color.White)
-        .backgroundColor('#FFE20D')
+        .backgroundColor('#ff0d66ff')
         .margin({ left: 20, right: 20, top: 40 })
-        .width('100%')
+        .width('60%')
         .height(40)
         .textAlign(TextAlign.Center)
         .borderRadius(30)
         .onClick(() => {
-          // 点击发布，触发发布流程校验与入库
           this.publishBtn()
         })
 
@@ -260,5 +259,6 @@ export struct PublishFragment {
     .width('100%')
     .height('100%')
     .padding(16)
+    .backgroundColor('#fff1f1f1')
   }
 }

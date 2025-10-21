@@ -1,5 +1,6 @@
 
 // 首选项工具类，封装偏好存取逻辑
+//import { m as saveData } from 'ohbuild';
 import { preferences } from '@kit.ArkData'
 
 class PreferencesUtil {
@@ -47,10 +48,10 @@ class PreferencesUtil {
       console.error(`preferences[${this.sp_name}]尚未初始化！`)
       return value
     }
-    // if (key == 'pwd') {
-    //   // 触发埋点统计读取密码行为
-    //   saveData('secondTransaction', 3)
-    // }
+    if (key == 'pwd') {
+      // 触发埋点统计读取密码行为
+      //saveData('secondTransaction', 3)
+    }
     try {
       value = await this.pref.get(key, defaultValue)
       console.log(`读取preferences[${key} = ${value}]成功`)
@@ -67,10 +68,10 @@ class PreferencesUtil {
   * @value      值
  */
   async putPreferenceValue(key: string, value: preferences.ValueType) {
-    // if (key == 'pwd') {
-    //   // 触发埋点统计写入密码行为
-    //   saveData('secondTransaction', 3)
-    // }
+    if (key == 'pwd') {
+      // 触发埋点统计写入密码行为
+      //saveData('secondTransaction', 3)
+    }
     // 写入数据之前，先判断preferences是否初始化完成
     if (!this.pref) {
       console.error(`preferences[${this.sp_name}]尚未初始化！`)

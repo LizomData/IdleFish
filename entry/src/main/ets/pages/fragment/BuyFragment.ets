@@ -89,7 +89,7 @@ export struct BuyFragment {
                   food.name= item['name']
                   food.people_want= item['people_want']
                   food.image_urls= String(item['image_urls']).includes("http") ? item['image_urls'] :
-                    "http://10.34.82.240:8800" + item['image_urls']
+                    GlobalVariable.server_ip + item['image_urls']
 
                   this.dataList.push(food);
 
@@ -241,7 +241,6 @@ export struct BuyFragment {
             .borderRadius(10)
             .backgroundColor(Color.White)
           }
-
           //.backgroundColor(Color.White)
         })
     }
@@ -257,13 +256,15 @@ export struct BuyFragment {
 
   build() {
     Column() {
-      // 页面标题
-      Text('我买入的')
-        .fontWeight(FontWeight.Bold)
-        .fontSize(20)
-        .margin({ top: 50, bottom: 10 })
+      Row() {
+        Text('我买入的')
+          .fontSize(24)
+          .padding(10)
+          .fontWeight(FontWeight.Medium)
+          .margin({ right: 10, top: 15, bottom: 10 })
+      }
+      .width('95%')
       Scroll() {
-        // 列表支持滚动浏览全部已购买商品
         this.bottomBuilder()
       }
       .height('100%')
