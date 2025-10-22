@@ -58,13 +58,13 @@ export struct MineFragment {
 
       Column({ space: 10 }) {
         Row() {
-          this.menuItemBuilder($r('app.media.arrow_left'), '我发布的', () => {
+          this.menuItemBuilder($r('app.media.list_square_bill'), '我发布的', () => {
             router.pushUrl({ url: 'pages/fragment/SellFragment' })
           })
-          this.menuItemBuilder($r('app.media.arrow_left'), '我买到的', () => {
+          this.menuItemBuilder($r('app.media.cart'), '我买到的', () => {
             router.pushUrl({ url: 'pages/fragment/BuyFragment' })
           })
-          this.menuItemBuilder($r('app.media.arrow_left'), '上架商品', () => {
+          this.menuItemBuilder($r('app.media.upload'), '上架商品', () => {
             router.pushUrl({ url: 'pages/fragment/PublishFragment' })
           })
         }
