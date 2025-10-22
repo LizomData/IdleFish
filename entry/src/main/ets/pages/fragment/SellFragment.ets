@@ -25,10 +25,11 @@ export struct SellFragment {
 
     // 创建请求对象
     const httpRequest = http.createHttp()
-    httpRequest.request(GlobalVariable.server_ip+'/api/items_my', {
+    httpRequest.request(GlobalVariable.server_ip + '/api/items_my', {
       method: http.RequestMethod.GET,
-      header: { 'Content-Type': 'application/json',
-        "Authorization":GlobalVariable.token,
+      header: {
+        'Content-Type': 'application/json',
+        "Authorization": GlobalVariable.token,
       },
 
     },
@@ -47,7 +48,7 @@ export struct SellFragment {
             return
           }
 
-          let list:  List<object> = JSON.parse(data.result.toString())["data"];
+          let list: List<object> = JSON.parse(data.result.toString())["data"];
           for (const item of list) {
             let food: Food = {
               price: String(item['price']),
@@ -106,6 +107,7 @@ export struct SellFragment {
 
   @Builder
   bottomBuilder() {
+
     //渲染商品列表数据
     WaterFlow({}) {
       ForEach(this.dataList,
@@ -167,7 +169,6 @@ export struct SellFragment {
     .columnsTemplate('1fr 1fr')
     .rowsGap(10)
     .columnsGap(10)
-    .height('100%')
   }
 
   build() {
@@ -180,14 +181,27 @@ export struct SellFragment {
           .margin({ right: 10, top: 25, bottom: 10 })
       }
       .width('95%')
-      Scroll() {
-        // 列表区域支持滚动查看全部商品
-        this.bottomBuilder()
+      if (this.dataList.length == 0) {
+        Column() {
+          Text("未发布商品").fontSize(30)
+        }.justifyContent(FlexAlign.Center) // 水平居中
+        .width('100%') // 父容器宽度
+        .height('90%') // 父容器高度
+
+
+      }else{
+        Scroll() {
+          // 列表区域支持滚动查看全部商品
+          this.bottomBuilder()
+        }
+        .scrollBar(BarState.Off)
+        .padding(15)
+        .height('80%') // 父容器高度
+
+        // .backgroundColor('#0d000000')
+
       }
-      .height('100%')
-      .scrollBar(BarState.Off)
-      .padding(15)
-      .backgroundColor('#0d000000')
+
     }
 
   }

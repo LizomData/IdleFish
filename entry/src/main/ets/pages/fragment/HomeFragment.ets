@@ -144,9 +144,14 @@ export struct HomeFragment {
 
   async onSearchClick() {
     // 查询包含关键字的商品列表并展示在搜索结果区域
-    this.searchList = await DbUtil.queryFoodListByName(this.searchKeyStr)
+    this.searchList = this.dataList.filter((item)=>{
+      return item.name.includes(this.searchKeyStr) || String(item.price).includes(this.searchKeyStr)
+    })
     this.isSearchState = true
   }
+
+
+
 
   //@Builder
   // topTabBuilder() {
@@ -347,6 +352,7 @@ export struct HomeFragment {
     .rowsGap(10)
     .columnsGap(10)
 
+
     //.padding(10)
   }
 
@@ -406,11 +412,11 @@ export struct HomeFragment {
                     .margin({ top: 10 })
                   Row() {
                     //价格
-                    Text('¥ ' + itemData.now_price)
+                    Text('¥ ' + itemData.price)
                       .fontColor(Color.Red).fontSize(14)
                       .fontWeight(600)
                     //已售
-                    Text(`${itemData.want_count}想要`)
+                    Text(`${itemData.people_want}想要`)
                       .fontColor('#ff696868').fontSize(12)
                       .margin({ left: 10 })
                   }
@@ -472,7 +478,7 @@ export struct HomeFragment {
           this.searchListBuilder()
         }
       }
-      .height('100%')
+      .height('90%')
       .scrollBar(BarState.Off)
       .attributeModifier(d1)
 

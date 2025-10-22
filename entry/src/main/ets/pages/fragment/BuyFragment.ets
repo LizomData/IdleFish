@@ -21,7 +21,7 @@ export struct BuyFragment {
     console.log('zushiyekeji BuyFragment aboutToAppear')
 
     const httpRequest = http.createHttp()
-    httpRequest.request(GlobalVariable.server_ip+'/api/order/list', {
+    httpRequest.request(GlobalVariable.server_ip + '/api/order/list', {
       method: http.RequestMethod.GET,
       header: {
         'Content-Type': 'application/json',
@@ -49,7 +49,7 @@ export struct BuyFragment {
 
 
             const httpRequest2 = http.createHttp()
-            httpRequest2.request(GlobalVariable.server_ip+'/api/items/'+item['item_id'], {
+            httpRequest2.request(GlobalVariable.server_ip + '/api/items/' + item['item_id'], {
               method: http.RequestMethod.GET,
               header: {
                 'Content-Type': 'application/json',
@@ -69,7 +69,7 @@ export struct BuyFragment {
                       duration: 1000,
                       bottom: '360vp'
                     })
-                    return ;
+                    return;
                   }
 
                   let item: object = JSON.parse(data.result.toString())["data"];
@@ -82,13 +82,13 @@ export struct BuyFragment {
                     image_urls: '',
                     price: ''
                   };
-                  food.price= item['price']
-                  food.id_= item['id']
-                  food.publish_u_id=''
-                  food.own_u_id= ''
-                  food.name= item['name']
-                  food.people_want= item['people_want']
-                  food.image_urls= String(item['image_urls']).includes("http") ? item['image_urls'] :
+                  food.price = item['price']
+                  food.id_ = item['id']
+                  food.publish_u_id = ''
+                  food.own_u_id = ''
+                  food.name = item['name']
+                  food.people_want = item['people_want']
+                  food.image_urls = String(item['image_urls']).includes("http") ? item['image_urls'] :
                     GlobalVariable.server_ip + item['image_urls']
 
                   this.dataList.push(food);
@@ -103,7 +103,7 @@ export struct BuyFragment {
                 console.error(err.message);
 
               })
-              // await this.fetchItemDetail(item['item_id'],food);
+            // await this.fetchItemDetail(item['item_id'],food);
 
 
           }
@@ -123,7 +123,7 @@ export struct BuyFragment {
     // this.dataList = await DbUtil.queryFoodListMeBuy()
   }
 
-  fetchItemDetail(item_id:string,): Food{
+  fetchItemDetail(item_id: string,): Food {
 
     let food: Food = {
       id_: '',
@@ -137,7 +137,7 @@ export struct BuyFragment {
 
     const httpRequest = http.createHttp()
 
-    httpRequest.request(GlobalVariable.server_ip+'/api/items/'+item_id, {
+    httpRequest.request(GlobalVariable.server_ip + '/api/items/' + item_id, {
       method: http.RequestMethod.GET,
       header: {
         'Content-Type': 'application/json',
@@ -157,18 +157,18 @@ export struct BuyFragment {
               duration: 1000,
               bottom: '360vp'
             })
-            return ;
+            return;
           }
 
           let item: object = JSON.parse(data.result.toString())["data"];
 
-          food.price= item['price']
-          food.id_= item['id']
-          food.publish_u_id=''
-          food.own_u_id= ''
-          food.name= item['name']
-          food.people_want= item['people_want']
-          food.image_urls= item['image_urls']
+          food.price = item['price']
+          food.id_ = item['id']
+          food.publish_u_id = ''
+          food.own_u_id = ''
+          food.name = item['name']
+          food.people_want = item['people_want']
+          food.image_urls = item['image_urls']
 
           // 销毁请求对象
           httpRequest.destroy()
@@ -241,6 +241,7 @@ export struct BuyFragment {
             .borderRadius(10)
             .backgroundColor(Color.White)
           }
+
           //.backgroundColor(Color.White)
         })
     }
@@ -264,13 +265,23 @@ export struct BuyFragment {
           .margin({ right: 10, top: 25, bottom: 10 })
       }
       .width('95%')
-      Scroll() {
-        this.bottomBuilder()
+
+      if (this.dataList.length == 0) {
+        Column() {
+          Text("未购买商品").fontSize(30)
+        }.justifyContent(FlexAlign.Center) // 水平居中
+        .width('100%') // 父容器宽度
+        .height('90%') // 父容器高度
+      } else {
+        Scroll() {
+          this.bottomBuilder()
+        }
+        .height('80%')
+        .scrollBar(BarState.Off)
+        .padding(15)
+        // .backgroundColor('#0d000000')
       }
-      .height('100%')
-      .scrollBar(BarState.Off)
-      .padding(15)
-      .backgroundColor('#0d000000')
+
     }
 
   }

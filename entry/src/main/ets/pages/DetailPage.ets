@@ -14,10 +14,29 @@ export const Path_Detail = 'pages/DetailPage'
 @Entry
 @Component
 struct ProductDetailPage {
+  @State imgScale: number = 1;
+  @State imgOffsetX: number = 0;
+  @State imgOffsetY: number = 0;
+  @State dragStartX: number = 0;
+  @State dragStartY: number = 0;
+  @State lastClickTime: number = 0;
+  @State enlargeImage: string | Resource = '';
+
+
   // 当前展示的商品信息，默认取内置数据以避免空对象
   food: Food = MyData.homeListData[0]
   // 当前登录用户 ID
   @State user_id: preferences.ValueType = ''
+
+  hideLarge() {
+     this.imgScale = 1;
+    this.imgOffsetX = 0;
+    this. imgOffsetY = 0;
+    this. dragStartX = 0;
+    this. dragStartY = 0;
+    this. lastClickTime = 0;
+    this.enlargeImage = '';
+  }
 
   async aboutToAppear() {
     console.log(JSON.stringify(router.getParams()))
@@ -36,13 +55,14 @@ struct ProductDetailPage {
     })
     // 创建请求对象
     const httpRequest = http.createHttp()
-    httpRequest.request(GlobalVariable.server_ip+'/api/order/create', {
+    httpRequest.request(GlobalVariable.server_ip + '/api/order/create', {
       method: http.RequestMethod.POST,
-      header: { 'Content-Type': 'application/json',
-        "Authorization":GlobalVariable.token,
+      header: {
+        'Content-Type': 'application/json',
+        "Authorization": GlobalVariable.token,
       },
-      extraData:JSON.stringify({
-        "item_id":Number(this.food.id_)
+      extraData: JSON.stringify({
+        "item_id": Number(this.food.id_)
       })
 
     },
@@ -61,7 +81,7 @@ struct ProductDetailPage {
             return
           }
 
-          Toast.show("购买成功: order_id为"+JSON.parse(data.result.toString())["data"]['order_id'].toString())
+          Toast.show("购买成功: order_id为" + JSON.parse(data.result.toString())["data"]['order_id'].toString())
           // 销毁请求对象
           httpRequest.destroy()
 
@@ -112,10 +132,75 @@ struct ProductDetailPage {
           //图片轮播
           Row() {
             Stack() {
-              // 主图区域，展示商品大图
-              Image(this.food.image_urls)
-                .width('90%')
-                .height(300).borderRadius(16)
+              if (this.enlargeImage) {
+                Stack() {
+                  // 主图区域，展示商品大图
+                  Image(this.enlargeImage)
+                    .width('90%')
+                    .height(300)
+                    .borderRadius(16)
+                    .scale({ x: this.imgScale, y: this.imgScale })
+                    .translate({ x: this.imgOffsetX, y: this.imgOffsetY })
+                    .gesture(
+                      PanGesture()
+                        .onActionStart((e: GestureEvent) => {
+                          this.dragStartX = e.offsetX;
+                          this.dragStartY = e.offsetY;
+                        })
+                        .onActionUpdate((e: GestureEvent) => {
+                          this.imgOffsetX = this.imgOffsetX + e.offsetX - this.dragStartX;
+                          this.imgOffsetY = this.imgOffsetY + e.offsetY - this.dragStartY;
+                          this.dragStartX = e.offsetX;
+                          this.dragStartY = e.offsetY;
+                        })
+                        .onActionEnd(() => {
+                          const maxX = (this.imgScale - 1) * 360;
+                          const maxY = (this.imgScale - 1) * 640;
+                          this.imgOffsetX = Math.max(-maxX, Math.min(maxX, this.imgOffsetX));
+                          this.imgOffsetY = Math.max(-maxY, Math.min(maxY, this.imgOffsetY));
+                          animateTo({ duration: 200, curve: Curve.EaseOut }, () => {
+                            this.imgOffsetX = this.imgOffsetX;
+                            this.imgOffsetY = this.imgOffsetY;
+                          });
+                        })
+                    )
+                    .onClick((event: ClickEvent) => {
+                      const now = Date.now();
+                      if (now - this.lastClickTime < 300) {
+                        this.imgScale = this.imgScale === 1 ? 2 : 1;
+                        this.imgOffsetX = 0;
+                        this.imgOffsetY = 0;
+                      }
+                      this.lastClickTime = now;
+                    })
+
+                  Button() {
+                    Image($r('app.media.close_green')).width(32).height(32)
+                  }
+                  .type(ButtonType.Circle)
+                  .backgroundColor(Color.Transparent)
+                  .onClick(() => this.hideLarge())
+                  .position({ x: '90%', y: '5%' })
+                  .zIndex(1000)
+                  .stateEffect(true)
+
+                }
+                .width('100%')
+                .height('100%')
+                .backgroundColor('#E0000000')
+                .position({ x: 0, y: 0 })
+                .zIndex(999)
+                .transition({ type: TransitionType.Insert, scale: { x: 1.1, y: 1.1 } })
+                .animation({ duration: 200 })
+              } else {
+                Image(this.food.image_urls)
+                  .width('90%')
+                  .height(300).borderRadius(16).onClick(() => {
+                  this.enlargeImage = this.food.image_urls;
+                })
+              }
+
+
               // Row() {
               //   // 右下角标识区域，可扩展为轮播指示器
               //   Text('0000321')
@@ -171,6 +256,7 @@ struct ProductDetailPage {
               .margin({ right: 10 })
               .height(60)
               .justifyContent(FlexAlign.Start)
+
               Column() {
                 Text('热销中🔥')
                   .fontSize(12)
@@ -178,7 +264,7 @@ struct ProductDetailPage {
                   .fontColor(Color.Red)
                   .backgroundColor('#FFFFE0E0')
                   .borderRadius(10)
-                  .margin({ bottom:3 })
+                  .margin({ bottom: 3 })
                 Text('品质保障')
                   .fontSize(12)
                   .padding(3)
@@ -187,7 +273,7 @@ struct ProductDetailPage {
                   .backgroundColor(Color.White)
                   .fontWeight(500)
               }
-              .margin({right: 20})
+              .margin({ right: 20 })
             }
             .justifyContent(FlexAlign.SpaceBetween)
             .width('100%')
@@ -252,7 +338,7 @@ struct ProductDetailPage {
         Text('平台将保障您的交易安全')
           .fontColor(Color.Gray)
           .fontSize(12).width('50%')
-          .margin({left:16,right:16})
+          .margin({ left: 16, right: 16 })
         Blank()
           .layoutWeight(1)
 

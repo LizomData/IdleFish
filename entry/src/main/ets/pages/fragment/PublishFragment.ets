@@ -18,6 +18,27 @@ import { GlobalVariable } from '../../util/GlobalVariable'
 @Entry
 @Component
 export struct PublishFragment {
+
+  @State imgScale: number = 1;
+  @State imgOffsetX: number = 0;
+  @State imgOffsetY: number = 0;
+  @State dragStartX: number = 0;
+  @State dragStartY: number = 0;
+  @State lastClickTime: number = 0;
+  @State enlargeImage: string | Resource = '';
+
+
+  hideLarge() {
+    this.imgScale = 1;
+    this.imgOffsetX = 0;
+    this. imgOffsetY = 0;
+    this. dragStartX = 0;
+    this. dragStartY = 0;
+    this. lastClickTime = 0;
+    this.enlargeImage = '';
+  }
+
+
   //islLoadImageSuccess :number = -1
   // 控制图片按钮是否已经确认
   isClickImageBtn :boolean = false
@@ -34,7 +55,8 @@ export struct PublishFragment {
 
   //每次都执行
   async aboutToAppear() {
-    console.log('zushiyekeji SellFragment aboutToAppear')
+    this.loadImageUrl=GlobalVariable.server_ip+'/uploads/upload.png'
+
     // EventUtil.register(0, async (res)=>{
     //   //清空搜索值
     //   this.searchKeyStr = ''
@@ -159,22 +181,93 @@ export struct PublishFragment {
         .fontSize(20)
         .fontWeight(FontWeight.Medium)
         .margin({ top: 40 })
-      Image(this.loadImageUrl)
-        .onError(() => {
-          // 加载失败时回退到默认占位图
-          this.loadImageUrl = MyData.detailImageUrl
-        })
-        .onFinish(()=>{
-          console.log(' img onFinish ')
-        })
-        .onComplete(()=>{
-          console.log(' img onComplete ')
-          //this.islLoadImageSuccess = 1
-        })
-        .height(300)
+
+      if (this.enlargeImage) {
+        Stack() {
+          // 主图区域，展示商品大图
+          Image(this.enlargeImage)
+            .width('90%')
+            .height(300)
+            .borderRadius(16)
+            .scale({ x: this.imgScale, y: this.imgScale })
+            .translate({ x: this.imgOffsetX, y: this.imgOffsetY })
+            .gesture(
+              PanGesture()
+                .onActionStart((e: GestureEvent) => {
+                  this.dragStartX = e.offsetX;
+                  this.dragStartY = e.offsetY;
+                })
+                .onActionUpdate((e: GestureEvent) => {
+                  this.imgOffsetX = this.imgOffsetX + e.offsetX - this.dragStartX;
+                  this.imgOffsetY = this.imgOffsetY + e.offsetY - this.dragStartY;
+                  this.dragStartX = e.offsetX;
+                  this.dragStartY = e.offsetY;
+                })
+                .onActionEnd(() => {
+                  const maxX = (this.imgScale - 1) * 360;
+                  const maxY = (this.imgScale - 1) * 640;
+                  this.imgOffsetX = Math.max(-maxX, Math.min(maxX, this.imgOffsetX));
+                  this.imgOffsetY = Math.max(-maxY, Math.min(maxY, this.imgOffsetY));
+                  animateTo({ duration: 200, curve: Curve.EaseOut }, () => {
+                    this.imgOffsetX = this.imgOffsetX;
+                    this.imgOffsetY = this.imgOffsetY;
+                  });
+                })
+            )
+            .onClick((event: ClickEvent) => {
+              const now = Date.now();
+              if (now - this.lastClickTime < 300) {
+                this.imgScale = this.imgScale === 1 ? 2 : 1;
+                this.imgOffsetX = 0;
+                this.imgOffsetY = 0;
+              }
+              this.lastClickTime = now;
+            })
+
+          Button() {
+            Image($r('app.media.close_green')).width(32).height(32)
+          }
+          .type(ButtonType.Circle)
+          .backgroundColor(Color.Transparent)
+          .onClick(() => this.hideLarge())
+          .position({ x: '90%', y: '5%' })
+          .zIndex(1000)
+          .stateEffect(true)
+
+        }
         .width('100%')
-        .margin({ top: 10 })
-        .borderRadius(5)
+        .height('100%')
+        .backgroundColor('#E0000000')
+        .position({ x: 0, y: 0 })
+        .zIndex(999)
+        .transition({ type: TransitionType.Insert, scale: { x: 1.1, y: 1.1 } })
+        .animation({ duration: 200 })
+      } else {
+        Image(this.loadImageUrl)
+          .onError(() => {
+            // 加载失败时回退到默认占位图
+            this.loadImageUrl = MyData.detailImageUrl
+          })
+          .onFinish(()=>{
+            console.log(' img onFinish ')
+          })
+          .onComplete(()=>{
+            console.log(' img onComplete ')
+            //this.islLoadImageSuccess = 1
+          })
+          .height("35%")
+          .width('80%')
+          .margin({ top: 10 })
+          .borderRadius(10)
+          .objectFit(ImageFit.Contain)
+          .onClick(() => {
+            this.enlargeImage = this.loadImageUrl;
+          })
+      }
+
+
+
+
 
       Row() {
         TextInput({ text: this.tempImageUrl, placeholder: '请输入商品图地址URL' })
