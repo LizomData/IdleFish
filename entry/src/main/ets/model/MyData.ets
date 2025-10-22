@@ -10,7 +10,7 @@ class MyData {
       img: $r("app.media.func1")
     },
     {
-      title: '辅导图书',
+      title: '服饰美妆',
       img: $r('app.media.func2')
     },
     {
