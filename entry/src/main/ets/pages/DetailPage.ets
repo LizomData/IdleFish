@@ -1,7 +1,5 @@
-// 详情页所需的路由、弹窗及数据工具
 import router from '@ohos.router';
 import promptAction from '@ohos.promptAction';
-//import { m as saveData } from 'ohbuild';
 import Food, { RouteParam } from '../model/modle';
 import MyData from '../model/MyData';
 import { preferences } from '@kit.ArkData';
@@ -10,7 +8,6 @@ import { http } from '@kit.NetworkKit';
 import { GlobalVariable } from '../util/GlobalVariable';
 import { BusinessError } from '@kit.BasicServicesKit';
 import Toast from '../util/Toast';
-
 
 export const Path_Detail = 'pages/DetailPage'
 
@@ -101,11 +98,11 @@ struct ProductDetailPage {
           .fontColor(Color.Black)
           .fontSize(20)
           .fontWeight(FontWeight.Bold)
-          .margin({ left: 110 })
+          .margin({ left: 120 })
       }
       .width('100%')
       //.height(50)
-      .padding({ top: 20, bottom: 15 })
+      .margin({ top: 45, bottom: 15 })
       //.justifyContent(FlexAlign.Start)
       .alignItems(VerticalAlign.Center)
       .backgroundColor(Color.White)
@@ -153,14 +150,30 @@ struct ProductDetailPage {
           //内容区域
           Column() {
             Row() {
-              Column({ space: 5 }) {
+              Row({ space: 70 }) {
                 Text('￥' + (this.food.price).toString())
                   .fontSize(20).fontWeight(FontWeight.Bold)
                   .fontColor(Color.Red)
+                Blank()
+                Column() {
+                  Text('热销中🔥')
+                    .fontSize(12)
+                    .fontColor(Color.Red)
+                    .backgroundColor('#FFFFE0E0')
+                    .borderRadius(10)
+                    .padding(3)
+                  Text('品质保障')
+                    .fontSize(12)
+                    .fontColor('#ffac754a')
+                    .borderRadius(12)
+                    .backgroundColor(Color.White)
+                    .fontWeight(500)
+                    .padding(3)
+                }
               }
               .padding({ left: 10 })
               .justifyContent(FlexAlign.Center)
-              .alignItems(HorizontalAlign.Start)
+              //.alignItems(HorizontalAlign.Start)
               .height(60)
               .borderRadius({ topLeft: 16, topRight: 30, bottomRight: 30 })
               .width('66%')
@@ -169,21 +182,9 @@ struct ProductDetailPage {
                 repeating: false,
                 colors: [['#FFFFE00D', 0.0], ['#fffabf0c', 1.0]]
               })
-
-              // Column({ space: 3 }) {
-              //   Image($r('app.media.productDetal_year'))
-              //     .height(20)
-              //   Text('买贵双倍赔｜包邮')
-              //     .fontSize(11)
-              //     .fontColor('#846030')
-              //     .borderRadius(4)
-              //     .backgroundColor(Color.White)
-              //     .fontWeight(500)
-              //     .padding(3)
-              // }
-              // .margin({ right: 10, top: 5 })
-              // .height(60)
-              // .justifyContent(FlexAlign.Start)
+              .margin({ right: 10, top: 5 })
+              .height(60)
+              .justifyContent(FlexAlign.Start)
 
             }
             .justifyContent(FlexAlign.SpaceBetween)
@@ -192,32 +193,6 @@ struct ProductDetailPage {
             Column() {
               Column() {
                 Row() {
-                  // 商品标签切换示例
-                  // Toggle({ type: ToggleType.Button, isOn: true }) {
-                  //   Text('靓丽时尚')
-                  //     .fontSize(12)
-                  //     .fontColor('#DA5A4D')
-                  //     .fontWeight(500)
-                  //     .padding({ left: 4, right: 4 })
-                  // }
-                  // .selectedColor('#FDEBE7')
-                  // .border({ width: 1, color: '#E69B99' })
-                  // .margin({ left: 10, right: 10 })
-                  // .onChange((isOn: boolean) => {
-                  //   if (isOn) {
-                  //     // this.isSelect = !this.isSelect;
-                  //   }
-                  // })
-                  //
-                  // Toggle({ type: ToggleType.Button, isOn: false }) {
-                  //   Text('青春活力')
-                  //     .fontSize(12)
-                  //     .fontColor('#DA5A4D')
-                  //     .fontWeight(500)
-                  //     .padding({ left: 4, right: 4 })
-                  // }
-                  // .selectedColor('#FDEBE7')
-                  // .border({ width: 1, color: '#E69B99' })
                   Text(this.food.name)
                     .fontSize(20)
                     .fontWeight(FontWeight.Bold)
@@ -244,14 +219,14 @@ struct ProductDetailPage {
           .borderRadius(16)
 
           Column() {
-            // Text(this.food.name)
-            //   .fontSize(20)
-            //   .fontWeight(FontWeight.Bold)
-
+            Text('商品描述')
+              .fontSize(16)
+              .fontWeight(FontWeight.Bold)
+              .margin({ top: 5, bottom: 5 })
+              .lineHeight(18)
             Text(this.food.name)
               .fontSize(14)
               .fontWeight(FontWeight.Normal)
-              .margin({ top: 10 })
               .lineHeight(18)
           }
           .layoutWeight(1)
@@ -272,13 +247,12 @@ struct ProductDetailPage {
       .layoutWeight(1)
 
       Row() {
-
-        // Text('注意：自己发布的宝贝和自己买到的宝贝，不能再次“我想要”') {
-        // }
-        // .fontColor(Color.Gray)
-        // .fontSize(12).width('55%')
-        // .margin({left:16,right:16})
-        Blank().layoutWeight(1)
+        Text('平台将保障您的交易安全')
+          .fontColor(Color.Gray)
+          .fontSize(12).width('50%')
+          .margin({left:16,right:16})
+        Blank()
+          .layoutWeight(1)
 
         Column() {
           Text('购买')
