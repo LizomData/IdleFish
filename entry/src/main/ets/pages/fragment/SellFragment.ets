@@ -21,7 +21,7 @@ export struct SellFragment {
   @State dataList: Array<Food> = []
 
   async fetchGoodList() {
-
+    this.dataList = []
 
     // 创建请求对象
     const httpRequest = http.createHttp()
@@ -85,14 +85,47 @@ export struct SellFragment {
   }
 
   async onDeleteClick(itemData: Food) {
-    // 删除单个商品后刷新列表
-    await DbUtil.deleteFood(itemData.id_)
+    // 创建请求对象
+    const httpRequest = http.createHttp()
+    httpRequest.request(GlobalVariable.server_ip + '/api/items/' + itemData.id_, {
+      method: http.RequestMethod.DELETE,
+      header: {
+        'Content-Type': 'application/json',
+        "Authorization": GlobalVariable.token,
+      },
 
+    },
+      // 请求完成（不管成功还是失败）都调用的回调函数
+      (err: BusinessError, data: http.HttpResponse) => {
+        if (!err) {
+          // 如果err无值代表请求成功，打印响应体
+          console.info('Result:' + JSON.stringify(data.result));
+
+          if (JSON.parse(data.result.toString())["code"] != "0") {
+            promptAction.showToast({
+              message: JSON.parse(data.result.toString())["msg"],
+              duration: 1000,
+              bottom: '360vp'
+            })
+            return
+          }
+
+
+          // 销毁请求对象
+          httpRequest.destroy()
+
+
+          return;
+        }
+        Toast.show(err.message)
+        console.error(err.message);
+
+      })
     promptAction.showToast({
       message: '删除成功'
     })
+    await this.fetchGoodList()
 
-    this.dataList = await DbUtil.queryFoodListMePublish()
   }
 
   goUpdatePage(item: Food) {
@@ -149,8 +182,49 @@ export struct SellFragment {
                 .height(30)
                 .margin({ right: 5 })
                 .onClick(() => {
-                  // 删除按钮单独处理，避免冒泡引发详情跳转
-                  this.onDeleteClick(itemData)
+
+                  AlertDialog.show(
+                    {
+                      title: '警告',
+                      message: '是否取消发布该商品?\n',
+                      autoCancel: true,
+                      alignment: DialogAlignment.Center,
+                      gridCount: 4,
+                      offset: { dx: 0, dy: -20 },
+                      primaryButton: {
+                        value: '取消❌',
+                        action: () => {
+                          console.info('Callback when the first button is clicked')
+                        }
+                      },
+                      secondaryButton: {
+                        enabled: true,
+                        defaultFocus: true,
+                        style: DialogButtonStyle.HIGHLIGHT,
+                        value: '确定✅',
+                        action: async () =>  {
+                          console.info('Callback when the second button is clicked')
+                          // 删除按钮单独处理，避免冒泡引发详情跳转
+                          await this.onDeleteClick(itemData)
+                        }
+                      },
+                      cancel: () => {
+                        console.info('Closed callbacks')
+                      },
+                      onWillDismiss: (dismissDialogAction: DismissDialogAction) => {
+                        console.info("reason=" + JSON.stringify(dismissDialogAction.reason))
+                        console.log("dialog onWillDismiss")
+                        if (dismissDialogAction.reason == DismissReason.PRESS_BACK) {
+                          dismissDialogAction.dismiss()
+                        }
+                        if (dismissDialogAction.reason == DismissReason.TOUCH_OUTSIDE) {
+                          dismissDialogAction.dismiss()
+                        }
+                      }
+                    }
+                  )
+
+
                 })
             }
             .alignContent(Alignment.BottomEnd)
@@ -181,6 +255,7 @@ export struct SellFragment {
           .margin({ right: 10, top: 25, bottom: 10 })
       }
       .width('95%')
+
       if (this.dataList.length == 0) {
         Column() {
           Text("未发布商品").fontSize(30)
@@ -189,7 +264,7 @@ export struct SellFragment {
         .height('90%') // 父容器高度
 
 
-      }else{
+      } else {
         Scroll() {
           // 列表区域支持滚动查看全部商品
           this.bottomBuilder()

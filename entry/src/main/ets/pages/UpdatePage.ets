@@ -112,6 +112,7 @@ export struct UpdatePage {
           // 销毁请求对象
           httpRequest.destroy()
 
+router.back()
           return;
         }
         Toast.show(err.message)

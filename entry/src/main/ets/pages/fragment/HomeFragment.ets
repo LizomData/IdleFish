@@ -150,46 +150,6 @@ export struct HomeFragment {
     this.isSearchState = true
   }
 
-
-
-
-  //@Builder
-  // topTabBuilder() {
-  //   // 顶部标签切换区域，使用 Tabs 组件实现
-  //   Column() {
-  //     Tabs({
-  //       barPosition: BarPosition.Start,
-  //       index: this.currTabIndex
-  //     }) {
-  //       ForEach(MyData.topTabBeanList, (item: TabBean, index: number) => {
-  //         TabContent() {
-  //
-  //         }.tabBar(
-  //           new SubTabBarStyle(item.title)
-  //             .indicator({
-  //               color: 'ff0d66ff'
-  //             })
-  //             .labelStyle({
-  //               unselectedColor: '#000000',
-  //               selectedColor: '#ff0d66ff'
-  //             })
-  //         )
-  //       })
-  //     }
-  //     .vertical(false)
-  //     .barHeight(55)
-  //     .height(55)
-  //     .width('60%')
-  //     .onChange((index: number) => {
-  //       let str = MyData.topTabBeanList[index].title
-  //       //Toast.show(str)
-  //       Toast.show('敬请期待')
-  //     })
-  //   }.width('100%').alignItems(HorizontalAlign.Start)
-  //
-  //   //.backgroundColor(Color.Red)
-  // }
-
   @Builder
   funcBuilder() {
     // 功能入口使用横向滚动实现快速导航
@@ -215,7 +175,6 @@ export struct HomeFragment {
           .borderRadius(16)
           //.height(150)
           .onClick(() => {
-            // 入口功能后续补齐，此处给予统一提示
             Toast.show('敬请期待')
           })
         })
@@ -236,19 +195,19 @@ export struct HomeFragment {
         .fontWeight(FontWeight.Medium)
       //.margin({ top: 16 })
 
-      // Image($r('app.media.ic_vip'))
-      //   .width(30)
-      //   .height(15)
-      //   .margin({ left: 5 })
-      // Text('二手交易就在集市')
-      //   .fontColor(Color.Gray)
-      //   .fontSize(13)
-      //   .fontWeight(FontWeight.Medium)
-      //   .layoutWeight(1)
-      //   .textAlign(TextAlign.End)
-      // Image($r('app.media.arrow_to_right'))
-      //   .width(15).height(15)
-      //   .margin({ left: 5 })
+      Image($r('app.media.ic_vip'))
+        .width(30)
+        .height(15)
+        .margin({ left: 5 })
+      Text('二手交易就在集市')
+        .fontColor(Color.Gray)
+        .fontSize(15)
+        .fontWeight(FontWeight.Medium)
+        .layoutWeight(1)
+        .textAlign(TextAlign.End)
+      Image($r('app.media.arrow_to_right'))
+        .width(15).height(15)
+        .margin({ left: 5 })
     }
     .width('100%')
     .margin({ top: 20, bottom: 5 })
@@ -256,26 +215,6 @@ export struct HomeFragment {
 
   }
 
-  // @Builder
-  // func2Builder() {
-  //   // 横向展示推荐位海报
-  //   Row() {
-  //     Image($r('app.media.hfunc1'))
-  //       .width('50%')//.objectFit(ImageFit.Fill)
-  //       .height(90).borderRadius(10)
-  //     Image($r('app.media.hfunc2'))
-  //       .width('20%')
-  //       .height(90).borderRadius(10)
-  //       .margin({ left: 10 })
-  //     Image($r('app.media.hfunc3'))
-  //       .width('20%')
-  //       .height(90).borderRadius(10)
-  //       .margin({ left: 10 })
-  //   }
-  //   .width('100%')
-  //   .margin({ top: 10 })
-  //
-  // }
 
   // title显示
   @Builder
@@ -286,17 +225,7 @@ export struct HomeFragment {
         .fontColor(Color.Black)
         .fontSize(20)
         .fontWeight(FontWeight.Medium)
-      //.fontColor($r("app.color.fuzhu2"))
-      //.fontColor($r("app.color.white"))
-
-      // Text('更多')
-      //   .margin({ right: 10 })
-      //   .fontWeight(FontWeight.Regular)
-      //   .fontSize(14)
-      //   .fontColor($r('app.color.black1'))
-      //.fontColor($r("app.color.white"))
     }
-    //.backgroundColor(Color.Red)
     .width('100%')
     .justifyContent(FlexAlign.SpaceBetween)
     .margin({ top: 15 })
@@ -464,10 +393,8 @@ export struct HomeFragment {
             }
             .width('100%')
             this.searchBuilder()
-            // this.topTabBuilder()
             this.userBuilder()
             this.funcBuilder()
-            // this.func2Builder()
             this.titleBuilder('为你推荐')
             this.bottomBuilder()
           }
