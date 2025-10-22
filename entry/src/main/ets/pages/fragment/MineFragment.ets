@@ -1,10 +1,9 @@
-// 个人中心页面依赖的路由与弹窗能力
 import router from '@ohos.router';
 import { o } from "hytech"
 import promptAction from '@ohos.promptAction';
 import { Path_Login } from '../LoginPage';
 import PreferencesUtil from '../../util/PreferencesUtil';
-import { preferences } from '@kit.ArkData';
+
 
 @Preview
 @Entry
@@ -55,10 +54,25 @@ export struct MineFragment {
       .height('50%')
       .backgroundImage($r('app.media.background'))
       .backgroundImageSize({ height: '150%', width: '100%' })
-
       .backgroundBlurStyle(BlurStyle.Regular)
 
       Column({ space: 10 }) {
+        Row() {
+          this.menuItemBuilder($r('app.media.arrow_left'), '我发布的', () => {
+            router.pushUrl({ url: 'pages/fragment/SellFragment' })
+          })
+          this.menuItemBuilder($r('app.media.arrow_left'), '我买到的', () => {
+            router.pushUrl({ url: 'pages/fragment/BuyFragment' })
+          })
+          this.menuItemBuilder($r('app.media.arrow_left'), '上架商品', () => {
+            router.pushUrl({ url: 'pages/fragment/PublishFragment' })
+          })
+        }
+        .padding(10)
+        .borderRadius(20)
+        .backgroundColor(Color.White)
+        .margin({bottom: 10})
+
         Column({ space: 10 }) {
           this.mineItemBuilder($r('app.media.arrow_up_circle'), '版本升级', () => {
             // 提示当前版本已是最新
@@ -184,6 +198,24 @@ export struct MineFragment {
     .onClick(() => {
       callback && callback();
     })
+  }
+
+  @Builder
+  menuItemBuilder(icon: Resource, title: string, onClick?: () => void) {
+    Column() {
+      Image(icon)
+        .width(40)
+        .height(40)
+        .fillColor(Color.Black)
+      Text(title)
+        .fontSize(14)
+        .fontWeight(FontWeight.Medium)
+        .margin({ top: 6 })
+    }
+    .onClick(() => {
+      onClick && onClick()
+    })
+    .width('33%')
   }
 }
 
