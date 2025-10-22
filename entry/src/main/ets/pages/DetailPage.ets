@@ -150,28 +150,14 @@ struct ProductDetailPage {
           //内容区域
           Column() {
             Row() {
-              Row({ space: 70 }) {
+              Row() {
                 Text('￥' + (this.food.price).toString())
                   .fontSize(20).fontWeight(FontWeight.Bold)
                   .fontColor(Color.Red)
-                Blank()
-                Column() {
-                  Text('热销中🔥')
-                    .fontSize(12)
-                    .fontColor(Color.Red)
-                    .backgroundColor('#FFFFE0E0')
-                    .borderRadius(10)
-                    .padding(3)
-                  Text('品质保障')
-                    .fontSize(12)
-                    .fontColor('#ffac754a')
-                    .borderRadius(12)
-                    .backgroundColor(Color.White)
-                    .fontWeight(500)
-                    .padding(3)
-                }
+                //Blank()
               }
-              .padding({ left: 10 })
+              .width('100%')
+              .padding({ left: 10, right: 10 })
               .justifyContent(FlexAlign.Center)
               //.alignItems(HorizontalAlign.Start)
               .height(60)
@@ -182,10 +168,26 @@ struct ProductDetailPage {
                 repeating: false,
                 colors: [['#FFFFE00D', 0.0], ['#fffabf0c', 1.0]]
               })
-              .margin({ right: 10, top: 5 })
+              .margin({ right: 10 })
               .height(60)
               .justifyContent(FlexAlign.Start)
-
+              Column() {
+                Text('热销中🔥')
+                  .fontSize(12)
+                  .padding(3)
+                  .fontColor(Color.Red)
+                  .backgroundColor('#FFFFE0E0')
+                  .borderRadius(10)
+                  .margin({ bottom:3 })
+                Text('品质保障')
+                  .fontSize(12)
+                  .padding(3)
+                  .fontColor('#ffac754a')
+                  .borderRadius(12)
+                  .backgroundColor(Color.White)
+                  .fontWeight(500)
+              }
+              .margin({right: 20})
             }
             .justifyContent(FlexAlign.SpaceBetween)
             .width('100%')
