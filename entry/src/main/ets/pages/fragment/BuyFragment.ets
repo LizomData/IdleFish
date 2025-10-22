@@ -261,7 +261,7 @@ export struct BuyFragment {
           .fontSize(24)
           .padding(10)
           .fontWeight(FontWeight.Medium)
-          .margin({ right: 10, top: 15, bottom: 10 })
+          .margin({ right: 10, top: 25, bottom: 10 })
       }
       .width('95%')
       Scroll() {

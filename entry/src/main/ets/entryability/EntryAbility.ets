@@ -1,47 +1,71 @@
 // Ability 入口需要的系统能力与项目工具
 import UIAbility from '@ohos.app.ability.UIAbility';
-// import { t as UIEntryAbility } from 'ohbuild';
-
 import hilog from '@ohos.hilog';
 import { i } from 'hytech';
-import window from '@ohos.window';
+import { window } from '@kit.ArkUI';
 import AbilityConstant from '@ohos.app.ability.AbilityConstant';
 import Want from '@ohos.app.ability.Want';
 import PreferenceUtil from '../util/PreferencesUtil';
 import { Path_splash } from '../pages/SplashPage';
-import DbUtil from '../util/DbUtil';
-import { Path_Main } from '../pages/MainPage';
 import { BusinessError } from '@kit.BasicServicesKit';
 import { Path_Login } from '../pages/LoginPage';
 
 export default class EntryAbility extends UIAbility {
 
   onCreate(want: Want, launchParam: AbilityConstant.LaunchParam): void {
-
+    hilog.info(0x0000, 'testTag', 'Ability onCreate');
   }
 
   onDestroy() {
-    hilog.info(0x0000, 'testTag', '%{public}s', 'Ability onDestroy');
+    hilog.info(0x0000, 'testTag', 'Ability onDestroy');
   }
 
   onWindowStageCreate(windowStage: window.WindowStage) {
-    // Main window is created, set main page for this ability
-    i(this.context, '#cacfbbaf')
-    hilog.info(0x0000, 'testTag', '%{public}s', 'Ability onWindowStageCreate');
+    hilog.info(0x0000, 'testTag', 'Ability onWindowStageCreate');
+    i(this.context, '#cacfbbaf');
 
-    // //沉浸式 获取应用主窗口
-    // let windowClass: window.Window = this.getWindow(windowStage, 'secondTransaction');
-    // // 1. 设置窗口全屏
-    // let isLayoutFullScreen = true;
-    // windowClass.setWindowLayoutFullScreen(isLayoutFullScreen)
-    //   .then(() => {
-    //     console.info('Succeeded in setting the window layout to full-screen mode.');
-    //   })
-    //   .catch((err: BusinessError) => {
-    //     console.error('Failed to set the window layout to full-screen mode. Cause:' + JSON.stringify(err));
-    //   });
+    let windowClass: window.Window | undefined = undefined;
+    windowStage.getMainWindow((err: BusinessError, data) => {
+      if (err.code) {
+        console.error('Failed to obtain the main window. Cause: ' + JSON.stringify(err));
+        return;
+      }
+      windowClass = data;
+      console.info('Succeeded in obtaining the main window.');
 
-    // 默认加载闪屏页作为入口
+      const names: ('status' | 'navigation')[] = ['status'];
+      windowClass.setWindowSystemBarEnable(names, (err) => {
+        if (err.code) {
+          console.error('Failed to hide system bars. Cause:' + JSON.stringify(err));
+          return;
+        }
+        console.info('System bars hidden successfully.');
+      });
+
+      const isLayoutFullScreen = true;
+      windowClass.setWindowLayoutFullScreen(isLayoutFullScreen, (err) => {
+        if (err.code) {
+          console.error('Failed to enable full-screen layout. Cause:' + JSON.stringify(err));
+          return;
+        }
+        console.info('Full-screen layout enabled.');
+      });
+
+      const sysBarProps: window.SystemBarProperties = {
+        statusBarColor: '#00000000',
+        navigationBarColor: '#00000000',
+        statusBarContentColor: '#ff000000',
+        navigationBarContentColor: '#ffffff'
+      };
+      windowClass.setWindowSystemBarProperties(sysBarProps, (err) => {
+        if (err.code) {
+          console.error('Failed to set system bar properties. Cause:' + JSON.stringify(err));
+          return;
+        }
+        console.info('System bar properties set successfully.');
+      });
+    });
+
     windowStage.loadContent(Path_splash, (err, data) => {
       if (err.code) {
         hilog.error(0x0000, 'testTag', 'Failed to load the content. Cause: %{public}s', JSON.stringify(err) ?? '');
@@ -49,23 +73,20 @@ export default class EntryAbility extends UIAbility {
       }
       hilog.info(0x0000, 'testTag', 'Succeeded in loading the content. Data: %{public}s', JSON.stringify(data) ?? '');
     });
-    // 初始化首选项与数据库工具
-    PreferenceUtil.init(this.context)
-    // DbUtil.init(this.context)
+
+    PreferenceUtil.init(this.context);
+    // DbUtil.init(this.context);
   }
 
   onWindowStageDestroy() {
-    // Main window is destroyed, release UI related resources
-    hilog.info(0x0000, 'testTag', '%{public}s', 'Ability onWindowStageDestroy');
+    hilog.info(0x0000, 'testTag', 'Ability onWindowStageDestroy');
   }
 
   onForeground() {
-    // Ability has brought to foreground
-    hilog.info(0x0000, 'testTag', '%{public}s', 'Ability onForeground');
+    hilog.info(0x0000, 'testTag', 'Ability onForeground');
   }
 
   onBackground() {
-    // Ability has back to background
-    hilog.info(0x0000, 'testTag', '%{public}s', 'Ability onBackground');
+    hilog.info(0x0000, 'testTag', 'Ability onBackground');
   }
 }

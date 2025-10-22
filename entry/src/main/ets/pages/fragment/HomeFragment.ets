@@ -454,6 +454,7 @@ export struct HomeFragment {
                 .fontSize(24)
                 .padding(10)
                 .fontWeight(FontWeight.Medium)
+                .margin({top: 20})
             }
             .width('100%')
             this.searchBuilder()
